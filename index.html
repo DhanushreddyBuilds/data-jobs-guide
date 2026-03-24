@@ -1,0 +1,3063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ff6b35">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ibbani DA">
+<meta name="description" content="Ibbani's Personal Data Analyst Career Tracker 2026">
+<link rel="manifest" href="manifest.json">
+<script>
+  // Register service worker for offline support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+<title>Ibbani · Data Analyst Journey 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN SYSTEM — Ibbani DA App v3
+   Dark-first, vibrant accents, mobile-optimized
+   ============================================================ */
+:root {
+  /* Background layers */
+  --bg:       #0f0f14;
+  --bg2:      #161620;
+  --surface:  #1c1c28;
+  --surface2: #242434;
+  --border:   #2e2e42;
+  --border2:  #3a3a52;
+
+  /* Brand colors */
+  --orange:      #ff6b35;
+  --orange-dim:  rgba(255,107,53,0.15);
+  --orange-glow: rgba(255,107,53,0.35);
+  --teal:        #00d4c8;
+  --teal-dim:    rgba(0,212,200,0.15);
+  --blue:        #4f8ef7;
+  --blue-dim:    rgba(79,142,247,0.15);
+  --purple:      #9b72f8;
+  --purple-dim:  rgba(155,114,248,0.15);
+  --green:       #2dd96e;
+  --green-dim:   rgba(45,217,110,0.15);
+  --red:         #f05252;
+  --red-dim:     rgba(240,82,82,0.15);
+  --yellow:      #f9c535;
+  --yellow-dim:  rgba(249,197,53,0.15);
+  --pink:        #f472b6;
+  --pink-dim:    rgba(244,114,182,0.15);
+
+  /* Text */
+  --text:  #f0eeff;
+  --text2: #9898b8;
+  --text3: #5a5a7a;
+
+  /* Shadows */
+  --shadow:    0 2px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.6);
+
+  /* Layout */
+  --nav-h:    64px;
+  --radius:   16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   PIN LOCK SCREEN
+   ============================================================ */
+#pinScreen {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.4s ease;
+}
+#pinScreen.hidden { display: none; }
+
+.pin-logo {
+  width: 72px; height: 72px; border-radius: 22px;
+  background: linear-gradient(135deg, #ff6b35, #ff9f43);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  box-shadow: 0 0 40px var(--orange-glow);
+  margin-bottom: 20px;
+}
+.pin-title   { font-size: 22px; font-weight: 800; margin-bottom: 4px; text-align: center; }
+.pin-sub     { font-size: 13px; color: var(--text2); font-weight: 600; margin-bottom: 32px; text-align: center; }
+
+.pin-dots {
+  display: flex; gap: 14px; margin-bottom: 28px;
+}
+.pin-dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--border2);
+  background: transparent;
+  transition: all 0.2s;
+}
+.pin-dot.filled {
+  background: var(--orange);
+  border-color: var(--orange);
+  box-shadow: 0 0 12px var(--orange-glow);
+}
+
+.pin-pad {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; width: 100%; max-width: 280px;
+  margin-bottom: 16px;
+}
+.pin-btn {
+  height: 64px; border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1.5px solid var(--border2);
+  color: var(--text); font-size: 22px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1px;
+}
+.pin-btn:active { background: var(--orange-dim); border-color: var(--orange); transform: scale(0.95); }
+.pin-btn .sub-letters { font-size: 9px; color: var(--text3); font-weight: 600; letter-spacing: 1.5px; }
+.pin-btn.del { font-size: 18px; background: var(--red-dim); border-color: rgba(240,82,82,0.3); }
+.pin-btn.del:active { background: var(--red-dim); border-color: var(--red); }
+.pin-btn.zero { grid-column: 2; }
+
+.pin-error {
+  font-size: 12px; color: var(--red); font-weight: 700;
+  text-align: center; min-height: 20px;
+  transition: opacity 0.3s;
+}
+.pin-footer {
+  font-size: 12px; color: var(--text3); font-weight: 600;
+  text-align: center; margin-top: 16px;
+  cursor: pointer; text-decoration: underline;
+}
+
+/* ============================================================
+   APP LAYOUT
+   ============================================================ */
+#app { display: none; flex-direction: column; min-height: 100vh; }
+#app.unlocked { display: flex; }
+
+/* ===== TOPBAR ===== */
+#topbar {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(15,15,20,0.92);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 1px 20px rgba(0,0,0,0.4);
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.app-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, #ff6b35, #ff9f43);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 3px 12px var(--orange-glow);
+}
+.app-name    { font-size: 15px; font-weight: 800; color: var(--text); }
+.app-subtitle { font-size: 10px; color: var(--text3); font-weight: 600; }
+
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.xp-badge {
+  background: var(--yellow-dim);
+  border: 1.5px solid rgba(249,197,53,0.3);
+  border-radius: 20px; padding: 4px 10px;
+  font-size: 11px; font-weight: 800; color: var(--yellow);
+  display: flex; align-items: center; gap: 4px;
+}
+.install-btn {
+  background: var(--orange); color: white;
+  border: none; border-radius: 8px;
+  padding: 7px 12px; font-size: 11px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: all 0.2s; display: flex; align-items: center; gap: 4px;
+}
+.install-btn:hover { background: #e5601f; transform: translateY(-1px); }
+#installBtn { display: none; }
+
+/* ===== BOTTOM NAV ===== */
+#bottomnav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(15,15,20,0.96);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 10px 4px 8px; cursor: pointer; gap: 3px;
+  position: relative; transition: all 0.2s;
+  border: none; background: none; font-family: inherit;
+}
+.nav-icon  { font-size: 20px; transition: transform 0.2s; }
+.nav-label { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.3px; }
+.nav-item.active .nav-label { color: var(--orange); }
+.nav-item.active .nav-icon { transform: translateY(-2px); }
+.nav-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--red); position: absolute; top: 6px; right: calc(50% - 16px);
+  display: none;
+}
+.nav-item.has-alert .nav-dot { display: block; }
+
+/* ===== PAGES ===== */
+.page {
+  display: none;
+  padding: 16px 16px calc(80px + env(safe-area-inset-bottom)) 16px;
+  max-width: 480px; margin: 0 auto; width: 100%;
+}
+.page.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+
+/* Section heading */
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.sec-title { font-size: 15px; font-weight: 800; color: var(--text); }
+.sec-link  { font-size: 12px; font-weight: 700; color: var(--orange); cursor: pointer; }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Progress bar */
+.prog-bar {
+  height: 8px; background: var(--bg2);
+  border-radius: 8px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%; border-radius: 8px;
+  background: linear-gradient(90deg, var(--orange), var(--yellow));
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.prog-fill.teal   { background: linear-gradient(90deg, var(--teal), var(--blue)); }
+.prog-fill.purple { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+.prog-fill.green  { background: linear-gradient(90deg, var(--green), var(--teal)); }
+
+/* Chip / Tag */
+.chip {
+  display: inline-block; padding: 3px 10px;
+  border-radius: 20px; font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.chip-orange { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+.chip-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(45,217,110,0.3); }
+.chip-red    { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(240,82,82,0.3); }
+.chip-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(249,197,53,0.3); }
+.chip-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(79,142,247,0.3); }
+.chip-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(155,114,248,0.3); }
+
+/* Tag */
+.tag-free { background: var(--green-dim); color: var(--green); border: 1px solid rgba(45,217,110,0.3); font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 5px; }
+.tag-paid { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(249,197,53,0.3); font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 5px; }
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border2);
+  padding: 10px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; z-index: 9000;
+  opacity: 0; transition: all 0.25s; pointer-events: none;
+  white-space: nowrap; box-shadow: var(--shadow-lg);
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 32px 16px; color: var(--text3); }
+.empty-state .big { font-size: 40px; margin-bottom: 8px; }
+.empty-state p { font-size: 13px; font-weight: 600; }
+
+/* ============================================================
+   HOME PAGE
+   ============================================================ */
+.hero-card {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff9f43 55%, #f9c535 100%);
+  border-radius: 22px; padding: 22px 20px;
+  margin-bottom: 16px; color: white;
+  position: relative; overflow: hidden;
+  box-shadow: 0 8px 40px var(--orange-glow);
+}
+.hero-card::before {
+  content: ''; position: absolute; top: -50px; right: -50px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+}
+.hero-card::after {
+  content: ''; position: absolute; bottom: -40px; left: 20px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+}
+.hero-greeting { font-size: 12px; font-weight: 700; opacity: 0.85; margin-bottom: 3px; }
+.hero-name { font-size: 23px; font-weight: 800; margin-bottom: 14px; position: relative; z-index: 1; }
+.hero-stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; position: relative; z-index: 1;
+}
+.hero-stat {
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(10px);
+  border-radius: 12px; padding: 10px; text-align: center;
+}
+.hero-stat-num   { font-size: 20px; font-weight: 800; }
+.hero-stat-label { font-size: 9px; font-weight: 700; opacity: 0.85; letter-spacing: 0.5px; }
+
+/* Overall progress arc */
+.prog-arc-wrap {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 16px; margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 16px;
+}
+.arc-circle {
+  width: 80px; height: 80px; flex-shrink: 0;
+  position: relative;
+}
+.arc-circle svg { transform: rotate(-90deg); }
+.arc-circle .arc-bg  { fill: none; stroke: var(--bg2); stroke-width: 7; }
+.arc-circle .arc-fg  { fill: none; stroke: var(--orange); stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+.arc-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.arc-pct   { font-size: 17px; font-weight: 800; color: var(--orange); line-height: 1; }
+.arc-label { font-size: 8px; font-weight: 700; color: var(--text3); margin-top: 2px; }
+.arc-details { flex: 1; }
+.arc-det-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.arc-det-item { text-align: center; }
+.arc-det-num   { font-size: 18px; font-weight: 800; }
+.arc-det-label { font-size: 10px; color: var(--text2); font-weight: 600; }
+
+/* Today's focus */
+.focus-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 14px; margin-bottom: 16px; box-shadow: var(--shadow);
+}
+.focus-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+.focus-level { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+.focus-task  { font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 10px; }
+.prog-row { display: flex; align-items: center; gap: 10px; }
+.prog-pct { font-size: 12px; font-weight: 800; color: var(--orange); min-width: 30px; }
+
+/* Streak row */
+.streak-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.streak-card {
+  flex: 1; background: var(--surface);
+  border-radius: var(--radius); border: 1px solid var(--border);
+  padding: 12px; text-align: center; box-shadow: var(--shadow);
+}
+.streak-num   { font-size: 22px; font-weight: 800; }
+.streak-label { font-size: 10px; font-weight: 700; color: var(--text3); margin-top: 2px; }
+
+/* Daily tip */
+.tip-card {
+  background: linear-gradient(135deg, #1e1a10, #1a1e10);
+  border: 1px solid rgba(249,197,53,0.25);
+  border-radius: var(--radius); padding: 14px;
+  margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start;
+}
+.tip-icon  { font-size: 22px; flex-shrink: 0; }
+.tip-label { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--yellow); margin-bottom: 3px; }
+.tip-text  { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.5; }
+
+/* Radar chart */
+.radar-wrap {
+  background: var(--surface);
+  border-radius: var(--radius); border: 1px solid var(--border);
+  padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow);
+}
+
+/* Motivational banner */
+.moti-card {
+  background: var(--orange-dim);
+  border: 1px solid rgba(255,107,53,0.25);
+  border-radius: var(--radius); padding: 14px;
+  margin-bottom: 16px; text-align: center;
+}
+.moti-card .moti-emoji { font-size: 22px; margin-bottom: 6px; }
+.moti-card .moti-title { font-size: 13px; font-weight: 800; color: var(--orange); margin-bottom: 4px; }
+.moti-card .moti-body  { font-size: 12px; font-weight: 600; color: var(--text2); line-height: 1.5; }
+
+/* ============================================================
+   ROADMAP PAGE
+   ============================================================ */
+.road-header { margin-bottom: 16px; }
+.road-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.road-sub   { font-size: 13px; color: var(--text2); font-weight: 600; }
+
+.level-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 10px; overflow: hidden;
+  box-shadow: var(--shadow); transition: border-color 0.2s;
+}
+.level-card.complete-card { border-color: rgba(45,217,110,0.4); }
+.level-card.current-card  { border-color: rgba(255,107,53,0.5); box-shadow: 0 4px 24px var(--orange-glow); }
+
+.level-header {
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; user-select: none;
+}
+.lvl-badge {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-shrink: 0; color: white; font-weight: 800; line-height: 1;
+}
+.lvl-n   { font-size: 17px; }
+.lvl-lbl { font-size: 8px; letter-spacing: 0.5px; opacity: 0.8; }
+.lvl-info { flex: 1; min-width: 0; }
+.lvl-title { font-size: 13px; font-weight: 800; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lvl-sub   { font-size: 11px; color: var(--text3); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lvl-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.lvl-pct   { font-size: 13px; font-weight: 800; }
+.lvl-weeks { font-size: 10px; color: var(--text3); font-weight: 600; }
+.chevron   { font-size: 12px; color: var(--text3); transition: transform 0.3s; flex-shrink: 0; }
+.level-card.open .chevron { transform: rotate(180deg); }
+
+.level-body {
+  display: none; padding: 0 16px 16px;
+  border-top: 1px solid var(--border);
+}
+.level-card.open .level-body { display: block; }
+
+.level-progress-bar {
+  height: 4px; background: var(--bg2);
+  border-radius: 4px; overflow: hidden;
+  margin: 0 16px 0 16px; transform: translateY(-1px);
+}
+.level-progress-fill {
+  height: 100%; border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* Topic items */
+.topic-section { margin-top: 14px; }
+.topic-sec-title {
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text3); margin-bottom: 8px;
+}
+.topic-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--bg2);
+  border-radius: var(--radius-sm); margin-bottom: 6px;
+  border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
+}
+.topic-item:active { transform: scale(0.98); }
+.topic-item:hover  { border-color: var(--orange); background: var(--orange-dim); }
+.topic-item.done   { background: rgba(45,217,110,0.08); border-color: rgba(45,217,110,0.3); }
+.topic-item.missed { background: rgba(240,82,82,0.08);  border-color: rgba(240,82,82,0.3); }
+
+.topic-cb {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 11px; transition: all 0.2s;
+  background: var(--surface2);
+}
+.topic-item.done   .topic-cb { background: var(--green);  border-color: var(--green);  color: #fff; }
+.topic-item.missed .topic-cb { background: var(--red);    border-color: var(--red);    color: #fff; }
+.topic-name   { font-size: 12px; font-weight: 700; flex: 1; }
+.topic-status { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; }
+.topic-item.done   .topic-status { background: var(--green-dim); color: var(--green); }
+.topic-item.missed .topic-status { background: var(--red-dim);   color: var(--red); }
+
+/* Resources */
+.res-section { margin-top: 14px; }
+.res-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg2);
+  margin-bottom: 6px;
+}
+.res-emoji { font-size: 18px; flex-shrink: 0; }
+.res-info  { flex: 1; min-width: 0; }
+.res-name  { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.res-desc  { font-size: 11px; color: var(--text3); font-weight: 600; }
+
+/* Project box */
+.project-box {
+  border-radius: var(--radius-sm); padding: 14px; margin-top: 12px;
+  border: 1.5px dashed;
+}
+.proj-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.proj-emoji { font-size: 22px; }
+.proj-name  { font-size: 13px; font-weight: 800; }
+.proj-desc  { font-size: 11px; color: var(--text2); font-weight: 600; line-height: 1.6; }
+
+/* Level connector arrow */
+.level-connector { text-align: center; padding: 2px; font-size: 16px; color: var(--border2); }
+
+/* ============================================================
+   TRACKER PAGE
+   ============================================================ */
+.tracker-hero {
+  background: linear-gradient(135deg, #00c9bc, #4f8ef7);
+  border-radius: 20px; padding: 20px; color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 28px rgba(0,181,172,0.3);
+}
+
+/* Skill grid */
+.skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.skill-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 14px; box-shadow: var(--shadow);
+}
+.skill-card-top  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.skill-card-name { font-size: 12px; font-weight: 800; }
+.skill-card-pct  { font-size: 15px; font-weight: 800; }
+.skill-track     { height: 6px; background: var(--bg2); border-radius: 6px; overflow: hidden; }
+.skill-fill      { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+.skill-status    { font-size: 10px; font-weight: 700; margin-top: 6px; }
+
+/* Missed topics */
+.missed-banner {
+  background: var(--red-dim); border: 1px solid rgba(240,82,82,0.3);
+  border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 12px;
+}
+.missed-count     { font-size: 28px; font-weight: 800; color: var(--red); }
+.missed-info-title { font-size: 13px; font-weight: 800; }
+.missed-info-sub  { font-size: 11px; color: var(--text3); font-weight: 600; }
+
+.missed-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid rgba(240,82,82,0.4);
+  border-radius: 8px; padding: 6px 12px;
+  font-size: 11px; font-weight: 700; color: var(--red);
+  margin: 0 6px 6px 0; cursor: pointer; transition: all 0.15s;
+}
+.missed-pill:hover { background: var(--red-dim); transform: translateY(-1px); }
+
+/* Skill self-rating */
+.skill-rate-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.skill-rate-name { font-size: 12px; font-weight: 700; width: 100px; flex-shrink: 0; color: var(--text2); }
+.stars { display: flex; gap: 3px; }
+.star  { font-size: 20px; cursor: pointer; transition: transform 0.1s; line-height: 1; }
+.star:hover { transform: scale(1.2); }
+.skill-rate-num { font-size: 12px; font-weight: 800; color: var(--orange); width: 24px; }
+
+/* Weekly calendar */
+.week-day { text-align: center; flex: 1; }
+.week-day-label { font-size: 11px; font-weight: 700; margin-bottom: 5px; }
+.week-day-box {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto; font-size: 13px; border: 2px solid var(--border);
+  transition: all 0.2s;
+}
+.week-day-box.studied  { background: var(--orange); border-color: var(--orange); color: white; }
+.week-day-box.today    { border-color: var(--orange); color: var(--orange); }
+.week-day-box.past     { background: var(--bg2); color: var(--text3); }
+
+/* ============================================================
+   PROJECTS PAGE
+   ============================================================ */
+.projects-hero {
+  background: linear-gradient(135deg, #9b72f8, #4f8ef7);
+  border-radius: 20px; padding: 20px; color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 28px rgba(155,114,248,0.3);
+}
+
+.proj-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px;
+  margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.proj-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.proj-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.proj-card-title { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+.proj-card-sub   { font-size: 11px; color: var(--text3); font-weight: 600; }
+.proj-card-desc  { font-size: 12px; color: var(--text2); font-weight: 600; line-height: 1.6; margin-bottom: 10px; }
+.proj-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.tool-pill {
+  font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 6px;
+  background: var(--bg2); border: 1px solid var(--border2); color: var(--text2);
+}
+.proj-outcome { font-size: 11px; color: var(--text3); font-weight: 600; }
+.proj-outcome strong { color: var(--text); }
+
+/* Portfolio tips */
+.portfolio-tip {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px; background: var(--bg2); border-radius: var(--radius-sm);
+  border: 1px solid var(--border); margin-bottom: 8px;
+}
+.ptip-icon { font-size: 20px; flex-shrink: 0; }
+.ptip-text { font-size: 12px; font-weight: 600; color: var(--text2); line-height: 1.5; }
+.ptip-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+/* ============================================================
+   INTERVIEW PAGE
+   ============================================================ */
+.interview-hero {
+  background: linear-gradient(135deg, #2dd96e, #00c9bc);
+  border-radius: 20px; padding: 20px; color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 28px rgba(45,217,110,0.3);
+}
+
+/* SQL Drills */
+.sql-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px; margin-bottom: 8px;
+}
+.sql-q { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+.sql-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.sql-solve-btn {
+  background: none; border: 1px solid var(--border2); border-radius: 6px;
+  padding: 5px 12px; font-size: 11px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: all 0.15s;
+  color: var(--text2);
+}
+.sql-solve-btn:hover  { border-color: var(--green); color: var(--green); }
+.sql-solve-btn.solved { background: var(--green-dim); border-color: rgba(45,217,110,0.4); color: var(--green); }
+
+/* Case study cards */
+.case-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px;
+  margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.case-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.case-num  {
+  width: 30px; height: 30px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: white; flex-shrink: 0;
+}
+.case-title { font-size: 14px; font-weight: 800; }
+.case-body  { font-size: 12px; color: var(--text2); font-weight: 600; line-height: 1.6; }
+.case-hint  {
+  margin-top: 8px; padding: 8px 10px;
+  background: var(--bg2); border-radius: var(--radius-xs);
+  border-left: 2.5px solid var(--orange);
+  font-size: 11px; color: var(--text3); font-weight: 600;
+}
+
+/* Interview tips */
+.itip-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; background: var(--bg2);
+  border-radius: var(--radius-sm); margin-bottom: 6px;
+  border: 1px solid var(--border);
+}
+.itip-num  {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: var(--orange); color: white;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.itip-text { font-size: 12px; font-weight: 600; color: var(--text2); line-height: 1.5; }
+.itip-text strong { color: var(--text); display: block; }
+
+/* ============================================================
+   JOB PLAN PAGE
+   ============================================================ */
+.job-hero {
+  background: linear-gradient(135deg, #9b72f8, #f472b6);
+  border-radius: 20px; padding: 20px; color: white;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 28px rgba(155,114,248,0.3);
+}
+
+.salary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.sal-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 14px; text-align: center;
+  box-shadow: var(--shadow);
+}
+.sal-amt  { font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+.sal-role { font-size: 10px; color: var(--text3); font-weight: 700; }
+
+.action-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px;
+  margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.action-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.action-num  {
+  width: 30px; height: 30px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: white; flex-shrink: 0;
+}
+.action-title { font-size: 14px; font-weight: 800; }
+.action-body  { font-size: 12px; color: var(--text2); font-weight: 600; line-height: 1.6; margin-bottom: 8px; }
+.action-tasks { display: flex; flex-direction: column; gap: 5px; }
+.action-task {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px; background: var(--bg2);
+  border-radius: var(--radius-xs); border: 1px solid var(--border);
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  color: var(--text2);
+}
+.action-task:hover { border-color: var(--orange); }
+.action-task.done  { background: var(--green-dim); border-color: rgba(45,217,110,0.3); color: var(--green); }
+.act-cb {
+  width: 18px; height: 18px; border-radius: 4px;
+  border: 2px solid var(--border2); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; margin-top: 1px; background: var(--surface2);
+}
+.action-task.done .act-cb { background: var(--green); border-color: var(--green); color: white; }
+
+/* Companies */
+.company-pill {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; color: var(--text2);
+}
+
+/* ============================================================
+   SETTINGS PAGE
+   ============================================================ */
+.settings-card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border); padding: 16px;
+  margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.settings-section-title {
+  font-size: 10px; font-weight: 800; color: var(--text3);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+}
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row-left { display: flex; align-items: center; gap: 8px; }
+.settings-icon { font-size: 18px; }
+.settings-label { font-size: 13px; font-weight: 700; }
+.settings-value { font-size: 12px; color: var(--text3); font-weight: 600; }
+
+/* Editable name input */
+.name-input {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 7px 12px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  font-family: inherit; width: 150px; text-align: right;
+  outline: none;
+}
+.name-input:focus { border-color: var(--orange); }
+
+/* PIN change */
+.pin-change-btn {
+  background: var(--blue-dim); color: var(--blue);
+  border: 1px solid rgba(79,142,247,0.3);
+  border-radius: 8px; padding: 8px 16px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: all 0.15s; width: 100%; margin-top: 8px;
+}
+.reset-btn {
+  background: var(--red-dim); color: var(--red);
+  border: 1px solid rgba(240,82,82,0.3);
+  border-radius: 8px; padding: 8px 16px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: inherit; width: 100%; margin-top: 8px; transition: all 0.15s;
+}
+.reset-btn:hover { background: rgba(240,82,82,0.2); }
+
+/* Progress export display */
+.export-box {
+  background: var(--bg2); border-radius: 8px;
+  padding: 10px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text3); line-height: 1.6;
+  border: 1px solid var(--border); margin-top: 8px; overflow-x: auto;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ============================================================
+   RESPONSIVE (>480px: center-column layout)
+   ============================================================ */
+@media (min-width: 480px) {
+  .page { padding-left: calc((100vw - 448px) / 2); padding-right: calc((100vw - 448px) / 2); max-width: none; }
+  #topbar, #bottomnav { max-width: 480px; left: 50%; transform: translateX(-50%); right: auto; width: 480px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PIN LOCK SCREEN
+     ============================================================ -->
+<div id="pinScreen">
+  <div class="pin-logo">📊</div>
+  <div class="pin-title" id="pinTitle">Welcome, Ibbani</div>
+  <div class="pin-sub" id="pinSub">Enter your PIN to access your DA Journey</div>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinInput('1')">1</button>
+    <button class="pin-btn" onclick="pinInput('2')">2<span class="sub-letters">ABC</span></button>
+    <button class="pin-btn" onclick="pinInput('3')">3<span class="sub-letters">DEF</span></button>
+    <button class="pin-btn" onclick="pinInput('4')">4<span class="sub-letters">GHI</span></button>
+    <button class="pin-btn" onclick="pinInput('5')">5<span class="sub-letters">JKL</span></button>
+    <button class="pin-btn" onclick="pinInput('6')">6<span class="sub-letters">MNO</span></button>
+    <button class="pin-btn" onclick="pinInput('7')">7<span class="sub-letters">PQRS</span></button>
+    <button class="pin-btn" onclick="pinInput('8')">8<span class="sub-letters">TUV</span></button>
+    <button class="pin-btn" onclick="pinInput('9')">9<span class="sub-letters">WXYZ</span></button>
+    <button class="pin-btn del" onclick="pinBackspace()">⌫</button>
+    <button class="pin-btn zero" onclick="pinInput('0')">0</button>
+    <div></div>
+  </div>
+  <div class="pin-error" id="pinError"></div>
+  <div class="pin-footer" id="pinFooter" onclick="pinForgot()">Forgot PIN?</div>
+</div>
+
+<!-- ============================================================
+     MAIN APP
+     ============================================================ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="topbar-left">
+      <div class="app-icon">📊</div>
+      <div>
+        <div class="app-name" id="appName">Ibbani · DA Journey</div>
+        <div class="app-subtitle">2026 Edition · Personal Tracker</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="xp-badge" id="xpBadge">⚡ 0 XP</div>
+      <button class="install-btn" id="installBtn">⬇ Install</button>
+    </div>
+  </div>
+
+  <!-- ==================== HOME ==================== -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div class="hero-greeting" id="heroGreeting">Good morning, Ibbani 👋</div>
+      <div class="hero-name">Your DA Journey</div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="h-pct">0%</div>
+          <div class="hero-stat-label">OVERALL</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="h-done">0</div>
+          <div class="hero-stat-label">DONE</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="h-streak">0</div>
+          <div class="hero-stat-label">STREAK 🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Arc + Stats -->
+    <div class="prog-arc-wrap">
+      <div class="arc-circle">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle class="arc-bg" cx="40" cy="40" r="34"/>
+          <circle class="arc-fg" id="arcFg" cx="40" cy="40" r="34"
+            stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+        </svg>
+        <div class="arc-inner">
+          <div class="arc-pct" id="arcPct">0%</div>
+          <div class="arc-label">DONE</div>
+        </div>
+      </div>
+      <div class="arc-details">
+        <div class="arc-det-row">
+          <div class="arc-det-item">
+            <div class="arc-det-num" style="color:var(--green)" id="arcDone">0</div>
+            <div class="arc-det-label">Topics Done</div>
+          </div>
+          <div class="arc-det-item">
+            <div class="arc-det-num" style="color:var(--red)" id="arcMissed">0</div>
+            <div class="arc-det-label">To Review</div>
+          </div>
+          <div class="arc-det-item">
+            <div class="arc-det-num" style="color:var(--text3)" id="arcTotal">0</div>
+            <div class="arc-det-label">Total</div>
+          </div>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="arcBar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Today's Focus -->
+    <div class="sec-head">
+      <div class="sec-title">📍 Today's Focus</div>
+      <div class="sec-link" onclick="showPage('roadmap')">View All →</div>
+    </div>
+    <div class="focus-card">
+      <div class="focus-label">Current Level</div>
+      <div class="focus-level" id="focusLevel">Level 1 — Excel & Spreadsheets</div>
+      <div class="focus-task" id="focusTask">Next: VLOOKUP & XLOOKUP</div>
+      <div class="prog-row">
+        <div class="prog-bar" style="flex:1"><div class="prog-fill" id="focusFill" style="width:0%"></div></div>
+        <div class="prog-pct" id="focusPct">0%</div>
+      </div>
+    </div>
+
+    <!-- Streak row -->
+    <div class="streak-row">
+      <div class="streak-card">
+        <div class="streak-num" id="strkDays">0</div>
+        <div class="streak-label">DAY STREAK 🔥</div>
+      </div>
+      <div class="streak-card">
+        <div class="streak-num" id="strkDone">0</div>
+        <div class="streak-label">TOPICS DONE ✅</div>
+      </div>
+      <div class="streak-card">
+        <div class="streak-num" id="strkXP">0</div>
+        <div class="streak-label">XP EARNED ⚡</div>
+      </div>
+    </div>
+
+    <!-- Daily Tip -->
+    <div class="tip-card">
+      <div class="tip-icon">💡</div>
+      <div>
+        <div class="tip-label">Today's Tip</div>
+        <div class="tip-text" id="dailyTip">Solve 2 SQL problems daily — it's the #1 interview skill!</div>
+      </div>
+    </div>
+
+    <!-- Skill Radar -->
+    <div class="sec-head">
+      <div class="sec-title">🕸 Skill Radar</div>
+      <div class="sec-link" onclick="showPage('tracker')">Details →</div>
+    </div>
+    <div class="radar-wrap">
+      <canvas id="radarChart" height="260"></canvas>
+    </div>
+
+    <!-- Motivational -->
+    <div class="moti-card">
+      <div class="moti-emoji">🚀</div>
+      <div class="moti-title" id="motiTitle">Remember —</div>
+      <div class="moti-body" id="motiBody">Your MCA background gives you a head start over 80% of applicants. One focused hour daily = job offer in 6 months.</div>
+    </div>
+
+  </div><!-- /home -->
+
+  <!-- ==================== ROADMAP ==================== -->
+  <div class="page" id="page-roadmap">
+    <div class="road-header">
+      <div class="road-title">📚 Learning Roadmap</div>
+      <div class="road-sub">7 Levels · Tap topics to mark ✅ Done or ⚠️ Review</div>
+    </div>
+
+    <!-- Learning Flow Sequence -->
+    <div style="margin:0 0 12px 0;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">🗺️ Learning Sequence — Follow This Order</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,107,53,0.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#ff6b35;flex-shrink:0">1</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--text1)">Beginner <span style="color:var(--text3);font-weight:600">— Levels 1–2</span></div>
+            <div style="font-size:11px;color:var(--text3);font-weight:600">Excel → SQL · Build Superstore Dashboard + SQL Analysis projects</div>
+          </div>
+        </div>
+        <div style="width:1px;height:8px;background:rgba(255,255,255,0.1);margin-left:14px"></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(155,114,248,0.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#9b72f8;flex-shrink:0">2</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--text1)">Intermediate <span style="color:var(--text3);font-weight:600">— Levels 3–4</span></div>
+            <div style="font-size:11px;color:var(--text3);font-weight:600">Python + Statistics · Build Zomato Analysis + A/B Test projects</div>
+          </div>
+        </div>
+        <div style="width:1px;height:8px;background:rgba(255,255,255,0.1);margin-left:14px"></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(79,142,247,0.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#4f8ef7;flex-shrink:0">3</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--text1)">Advanced <span style="color:var(--text3);font-weight:600">— Levels 5–6</span></div>
+            <div style="font-size:11px;color:var(--text3);font-weight:600">Power BI + ML · Build IPL Dashboard + Churn Predictor projects</div>
+          </div>
+        </div>
+        <div style="width:1px;height:8px;background:rgba(255,255,255,0.1);margin-left:14px"></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(45,217,110,0.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#2dd96e;flex-shrink:0">4</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--text1)">Job-Ready <span style="color:var(--text3);font-weight:600">— Level 7</span></div>
+            <div style="font-size:11px;color:var(--text3);font-weight:600">GitHub + Resume + Apply · Capstone project → first offer</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:8px 10px;background:rgba(255,107,53,0.08);border-radius:8px;border-left:3px solid var(--accent)">
+        <div style="font-size:11px;color:var(--text2);font-weight:700">✅ Complete each level fully before moving to the next. Don't skip ahead — each skill unlocks the next.</div>
+      </div>
+    </div>
+
+    <div id="levelsList"></div>
+  </div>
+
+  <!-- ==================== TRACKER ==================== -->
+  <div class="page" id="page-tracker">
+
+    <div class="tracker-hero">
+      <div style="font-size:20px;font-weight:800;margin-bottom:4px">📊 Skill Tracker</div>
+      <div style="font-size:13px;opacity:0.85;font-weight:600">See exactly where you stand</div>
+    </div>
+
+    <!-- Missed Topics -->
+    <div class="sec-head">
+      <div class="sec-title">⚠️ Topics to Review</div>
+    </div>
+    <div id="missedList">
+      <div class="empty-state"><div class="big">🎉</div><p>No missed topics yet!</p></div>
+    </div>
+
+    <!-- Skill Progress -->
+    <div class="sec-head" style="margin-top:8px">
+      <div class="sec-title">📈 Skill Progress</div>
+    </div>
+    <div class="skill-grid" id="skillGrid"></div>
+
+    <!-- Self Rating -->
+    <div class="sec-head">
+      <div class="sec-title">⭐ Rate Your Skills</div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:14px">Be honest — this helps identify focus areas</div>
+      <div id="skillRateWrap"></div>
+    </div>
+
+    <!-- Weekly Calendar -->
+    <div class="sec-head" style="margin-top:16px">
+      <div class="sec-title">📅 This Week</div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between" id="weekCal"></div>
+    </div>
+
+  </div><!-- /tracker -->
+
+  <!-- ==================== PROJECTS ==================== -->
+  <div class="page" id="page-projects">
+
+    <div class="projects-hero">
+      <div style="font-size:22px;font-weight:800;margin-bottom:4px">🛠 Projects & Portfolio</div>
+      <div style="font-size:13px;opacity:0.85;font-weight:600">Build real things. Get hired.</div>
+    </div>
+
+    <!-- Learning Sequence Flow -->
+    <div style="background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(155,114,248,0.08));border:1px solid rgba(255,107,53,0.2);border-radius:14px;padding:14px 16px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">📍 Recommended Build Order</div>
+      <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:8px">
+        <div style="background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.3);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ff6b35">🌱 Beginner<br><span style="font-size:10px;opacity:.8">Excel + SQL + Python EDA</span></div>
+        <div style="font-size:16px;color:var(--text3);padding:0 6px">→</div>
+        <div style="background:rgba(155,114,248,0.15);border:1px solid rgba(155,114,248,0.3);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#9b72f8">⚡ Intermediate<br><span style="font-size:10px;opacity:.8">Pandas + Power BI + Stats</span></div>
+        <div style="font-size:16px;color:var(--text3);padding:0 6px">→</div>
+        <div style="background:rgba(79,142,247,0.15);border:1px solid rgba(79,142,247,0.3);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#4f8ef7">🚀 Advanced<br><span style="font-size:10px;opacity:.8">ML + Forecasting + SHAP</span></div>
+        <div style="font-size:16px;color:var(--text3);padding:0 6px">→</div>
+        <div style="background:rgba(45,217,110,0.15);border:1px solid rgba(45,217,110,0.3);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#2dd96e">💼 Job Ready<br><span style="font-size:10px;opacity:.8">GitHub + LinkedIn + Apply</span></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-weight:600;margin-top:10px">⚠️ Complete each level before moving to the next. Each project builds on skills from the previous.</div>
+    </div>
+
+    <div id="projectsList"></div>
+
+    <!-- Portfolio Guide -->
+    <div class="sec-head" style="margin-top:8px">
+      <div class="sec-title">🌐 Portfolio Building Guide</div>
+    </div>
+    <div class="card" style="margin-bottom:16px" id="portfolioGuide"></div>
+
+    <!-- GitHub Tips -->
+    <div class="sec-head">
+      <div class="sec-title">🐙 GitHub Tips</div>
+    </div>
+    <div class="card" id="githubTips"></div>
+
+  </div><!-- /projects -->
+
+  <!-- ==================== INTERVIEW ==================== -->
+  <div class="page" id="page-interview">
+
+    <div class="interview-hero">
+      <div style="font-size:22px;font-weight:800;margin-bottom:4px">🎯 Interview Prep</div>
+      <div style="font-size:13px;opacity:0.85;font-weight:600">SQL drills, case studies, and tips</div>
+    </div>
+
+    <!-- SQL Drills -->
+    <div class="sec-head">
+      <div class="sec-title">💻 SQL Drills</div>
+      <div id="sqlProgress" style="font-size:12px;font-weight:800;color:var(--green)">0/20 solved</div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:12px">Real interview questions. Mark solved as you practice.</div>
+      <div id="sqlDrills"></div>
+    </div>
+
+    <!-- Case Studies -->
+    <div class="sec-head">
+      <div class="sec-title">📋 Business Case Studies</div>
+    </div>
+    <div id="caseStudies" style="margin-bottom:16px"></div>
+
+    <!-- Interview Tips -->
+    <div class="sec-head">
+      <div class="sec-title">🧠 Interview Tips</div>
+    </div>
+    <div class="card" id="interviewTips"></div>
+
+  </div><!-- /interview -->
+
+  <!-- ==================== JOB PLAN ==================== -->
+  <div class="page" id="page-job">
+
+    <div class="job-hero">
+      <div style="font-size:22px;font-weight:800;margin-bottom:4px">💼 Job Plan</div>
+      <div style="font-size:13px;opacity:0.85;font-weight:600">Month-by-month to ₹10L+</div>
+    </div>
+
+    <!-- Salary -->
+    <div class="sec-head">
+      <div class="sec-title">💰 Salary Targets</div>
+    </div>
+    <div class="salary-grid">
+      <div class="sal-card"><div class="sal-amt" style="color:var(--green)">₹6–10L</div><div class="sal-role">Month 6 Target</div></div>
+      <div class="sal-card"><div class="sal-amt" style="color:var(--blue)">₹12–18L</div><div class="sal-role">Year 2 Goal</div></div>
+      <div class="sal-card"><div class="sal-amt" style="color:var(--purple)">₹20L+</div><div class="sal-role">3-Year Vision</div></div>
+      <div class="sal-card"><div class="sal-amt" style="color:var(--yellow)">₹3–8L</div><div class="sal-role">Freelance Side</div></div>
+    </div>
+
+    <!-- Action Plan -->
+    <div class="sec-head">
+      <div class="sec-title">🗓 Month-by-Month Plan</div>
+    </div>
+    <div id="jobPlanList"></div>
+
+    <!-- Companies -->
+    <div class="sec-head" style="margin-top:8px">
+      <div class="sec-title">🏢 Companies to Target</div>
+    </div>
+    <div class="card">
+      <div style="display:flex;flex-wrap:wrap;gap:8px" id="companiesList"></div>
+    </div>
+
+  </div><!-- /job -->
+
+  <!-- ==================== SETTINGS ==================== -->
+  <div class="page" id="page-settings">
+    <div style="font-size:20px;font-weight:800;margin-bottom:16px">⚙️ Settings</div>
+
+    <!-- Profile -->
+    <div class="settings-card">
+      <div class="settings-section-title">👤 My Profile</div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">🙍</span><span class="settings-label">Name</span></div>
+        <input class="name-input" id="settingsName" type="text" placeholder="Your name" onchange="updateName(this.value)">
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">🎯</span><span class="settings-label">Target Role</span></div>
+        <span class="settings-value">Data Analyst · ₹10L+</span>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">📅</span><span class="settings-label">Timeline</span></div>
+        <span class="settings-value">6 Months · 2026</span>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">⏱</span><span class="settings-label">Daily Goal</span></div>
+        <span class="settings-value">2.5h weekday</span>
+      </div>
+    </div>
+
+    <!-- App Settings -->
+    <div class="settings-card">
+      <div class="settings-section-title">📱 App</div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">ℹ️</span><span class="settings-label">Version</span></div>
+        <span class="settings-value">3.0.0 · 2026 Edition</span>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">💾</span><span class="settings-label">Storage</span></div>
+        <span class="settings-value">Local (your device)</span>
+      </div>
+      <div class="settings-row" id="installRow" style="cursor:pointer" onclick="tryInstall()">
+        <div class="settings-row-left"><span class="settings-icon">📲</span><span class="settings-label">Install as App</span></div>
+        <span class="settings-value" style="color:var(--orange)">Tap →</span>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="settings-card">
+      <div class="settings-section-title">🔐 Security</div>
+      <div class="settings-row">
+        <div class="settings-row-left"><span class="settings-icon">🔑</span><span class="settings-label">PIN Lock</span></div>
+        <span class="settings-value" id="pinStatus">Set ✅</span>
+      </div>
+      <button class="pin-change-btn" onclick="changePin()">🔄 Change PIN</button>
+    </div>
+
+    <!-- Progress Stats -->
+    <div class="settings-card">
+      <div class="settings-section-title">📊 My Progress Summary</div>
+      <div id="progressSummary"></div>
+    </div>
+
+    <!-- Reset -->
+    <div class="settings-card">
+      <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:4px">⚠️ Reset Progress</div>
+      <div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:4px">Clears all tracked data. Cannot be undone.</div>
+      <button class="reset-btn" onclick="confirmReset()">Reset All Progress</button>
+    </div>
+
+    <div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;font-weight:600">
+      Made with ❤️ for Ibbani<br>Your path to Data Analytics excellence 🚀<br>
+      <span style="font-size:10px;color:var(--text3);margin-top:4px;display:block">All data stored locally on your device</span>
+    </div>
+  </div><!-- /settings -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomnav">
+    <button class="nav-item active" data-page="home" onclick="showPage('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" data-page="roadmap" onclick="showPage('roadmap')">
+      <span class="nav-icon">🗺️</span><span class="nav-label">Roadmap</span>
+      <span class="nav-dot"></span>
+    </button>
+    <button class="nav-item" data-page="tracker" onclick="showPage('tracker')">
+      <span class="nav-icon">📊</span><span class="nav-label">Tracker</span>
+      <span class="nav-dot"></span>
+    </button>
+    <button class="nav-item" data-page="projects" onclick="showPage('projects')">
+      <span class="nav-icon">🛠</span><span class="nav-label">Projects</span>
+    </button>
+    <button class="nav-item" data-page="interview" onclick="showPage('interview')">
+      <span class="nav-icon">🎯</span><span class="nav-label">Interview</span>
+    </button>
+  </div>
+
+</div><!-- #app -->
+
+<div id="toast"></div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+'use strict';
+
+// ============================================================
+// DATA — Full 2026 DA Roadmap
+// ============================================================
+const LEVELS = [
+  {
+    id:'lv1', title:'Excel & Spreadsheets', sub:'Where every analyst starts',
+    weeks:'Weeks 1–2', color:'#ff6b35', bg:'rgba(255,107,53,0.1)',
+    xp: 80,
+    project:{
+      name:'Store Sales Dashboard',
+      desc:'Download Sample Superstore from Kaggle. Build a pivot table dashboard showing Sales by Region, Monthly Trend, and Top 10 Products. Write 5 business insights.',
+      tools:['Excel / Google Sheets', 'Kaggle Dataset'],
+      dataset:'kaggle.com/datasets/vivek468/superstore-dataset-final',
+      outcome:'Your first shareable dashboard. Screenshot it for LinkedIn.'
+    },
+    topics:[
+      {id:'lv1_1', name:'VLOOKUP & XLOOKUP', tasks:['Watch 15-min VLOOKUP tutorial (Leila Gharani)','Write 3 VLOOKUP formulas on sample data','Convert 1 VLOOKUP to XLOOKUP — note the difference','Handle the #N/A error using IFERROR']},
+      {id:'lv1_2', name:'Pivot Tables — basics & advanced', tasks:['Create a pivot table from a 500+ row dataset','Add Row, Column, Values, and Filter fields each','Group dates by Month and Quarter','Create a % of Total column in the values area']},
+      {id:'lv1_3', name:'Pivot Charts', tasks:['Turn your pivot table into a bar chart','Add a slicer that filters both table and chart','Change chart type to line for trend data','Format chart: remove gridlines, add data labels']},
+      {id:'lv1_4', name:'SUMIF, COUNTIF, AVERAGEIF', tasks:['Write COUNTIF to count orders > ₹5000','Write SUMIF to total sales by region','Write AVERAGEIF to average rating for one product','Nest SUMIFS with 3 criteria simultaneously']},
+      {id:'lv1_5', name:'Conditional Formatting', tasks:['Apply color scale to a sales column','Highlight duplicate values in a column','Create a rule to flag values below average','Use icon sets (arrows/traffic lights) on KPIs']},
+      {id:'lv1_6', name:'Data Validation & Drop-downs', tasks:['Create a drop-down list from a named range','Add an input message and error alert','Use data validation to restrict numeric input range','Build a dependent drop-down (Region → City)']},
+      {id:'lv1_7', name:'Basic Charts (Bar, Line, Pie, Scatter)', tasks:['Build a bar chart showing top 10 products by sales','Build a line chart showing monthly trend','Add a secondary axis for a combo chart','Format: custom colors, no border, minimal gridlines']},
+      {id:'lv1_8', name:'Power Query — Connect & Transform', tasks:['Connect to a CSV and load into Power Query','Remove nulls, rename columns, change data types','Split a "Full Name" column into First + Last','Append two tables from different sheets']},
+      {id:'lv1_9', name:'Excel Tables & Structured References', tasks:['Convert a range to an Excel Table (Ctrl+T)','Write a formula using [@Column] structured reference','Add a Total Row and enable column filters','Understand why Tables auto-expand with new rows']},
+      {id:'lv1_10', name:'INDEX + MATCH', tasks:['Write INDEX(array, MATCH(lookup)) to replace VLOOKUP','Use INDEX+MATCH for a left-side lookup','Use INDEX+MATCH to do a 2-way lookup (row + column)','Compare: when to use XLOOKUP vs INDEX+MATCH']},
+    ],
+    resources:[
+      {icon:'🎥', name:'Leila Gharani — Excel for Beginners', desc:'YouTube · Best free Excel content', type:'free'},
+      {icon:'🎥', name:'Kevin Stratvert — Google Sheets', desc:'YouTube · Perfect alternative to Excel', type:'free'},
+      {icon:'🌐', name:'ExcelJet.net', desc:'Best Excel formula reference site', type:'free'},
+      {icon:'📘', name:'Udemy — Excel Beginner to Advanced', desc:'Full structured course', type:'paid'},
+    ]
+  },
+  {
+    id:'lv2', title:'SQL — Talk to Databases', sub:'#1 skill in every DA interview',
+    weeks:'Weeks 3–6', color:'#f9c535', bg:'rgba(249,197,53,0.1)',
+    xp: 120,
+    project:{
+      name:'E-Commerce SQL Analysis',
+      desc:'Use the Northwind database (free on GitHub). Answer 15 business questions: monthly revenue, top customers, product performance, order patterns. Export results to Excel.',
+      tools:['DB Browser for SQLite / PostgreSQL', 'Northwind DB'],
+      dataset:'github.com/jpwhite3/northwind-SQLite3',
+      outcome:'A SQL analysis notebook with 15+ queries and business conclusions.'
+    },
+    topics:[
+      {id:'lv2_1', name:'SELECT, WHERE, ORDER BY, LIMIT', tasks:['Write 5 queries using WHERE with AND/OR','Use BETWEEN, IN, LIKE in separate queries','Sort results by multiple columns with ORDER BY','Use DISTINCT to remove duplicates in a result']},
+      {id:'lv2_2', name:'GROUP BY + Aggregate Functions', tasks:['Write COUNT, SUM, AVG, MIN, MAX on a table','GROUP BY one column and view aggregated result','GROUP BY multiple columns simultaneously','Add HAVING clause to filter grouped results']},
+      {id:'lv2_3', name:'JOINs — INNER, LEFT, RIGHT, FULL', tasks:['Write an INNER JOIN across orders + customers tables','Write a LEFT JOIN and explain what NULLs mean here','Chain 3 table JOIN in one query','Find unmatched records using LEFT JOIN + IS NULL']},
+      {id:'lv2_4', name:'String & Date Functions', tasks:['Use CONCAT, TRIM, UPPER, LOWER on name columns','Extract year, month, day from a date column','Calculate DATEDIFF between two date columns','Use CASE WHEN to label records based on a date range']},
+      {id:'lv2_5', name:'NULL Handling', tasks:['Find all rows where a column IS NULL','Replace NULLs with a default using COALESCE','Use NULLIF to convert zero to NULL','Explain: why NULL ≠ 0 in a GROUP BY context']},
+      {id:'lv2_6', name:'Window Functions — RANK & ROW_NUMBER', tasks:['Write RANK() OVER (ORDER BY sales DESC)','Write DENSE_RANK() and explain vs RANK','Write ROW_NUMBER() PARTITION BY region','Use RANK to find top 3 per category in one query']},
+      {id:'lv2_7', name:'Window Functions — LAG, LEAD, Running Totals', tasks:['Write LAG(sales,1) to get previous row value','Calculate month-over-month change using LAG','Write SUM(sales) OVER (ORDER BY date) for running total','Use LEAD to find next appointment date for each patient']},
+      {id:'lv2_8', name:'CTEs & Subqueries', tasks:['Rewrite a subquery as a CTE using WITH','Write a CTE with 2 steps (intermediate + final)','Use a subquery in WHERE to filter by aggregate','Explain: when CTE vs subquery is more readable']},
+      {id:'lv2_9', name:'CASE WHEN & Advanced Filtering', tasks:['Use CASE WHEN to bucket customers into High/Mid/Low','Use CASE WHEN inside SUM() to pivot data','Write a query using HAVING with multiple conditions','Combine WHERE + HAVING in a single complex query']},
+      {id:'lv2_10', name:'Query Optimization Basics', tasks:['Run EXPLAIN on a slow query and read the output','Add an index to a frequently filtered column','Rewrite a SELECT * to only select needed columns','Compare: CTE vs temp table — when to use each']},
+    ],
+    resources:[
+      {icon:'🌐', name:'SQLZoo.net', desc:'Best free interactive SQL practice', type:'free'},
+      {icon:'🏆', name:'LeetCode SQL — Easy to Medium', desc:'Interview-focused problems', type:'free'},
+      {icon:'🌐', name:'Mode Analytics SQL Tutorial', desc:'Business-context SQL problems', type:'free'},
+      {icon:'🎥', name:'Alex the Analyst — SQL Series', desc:'YouTube · Practical walk-throughs', type:'free'},
+      {icon:'📘', name:'Udemy — Complete SQL Bootcamp (Portilla)', desc:'Most comprehensive SQL course', type:'paid'},
+    ]
+  },
+  {
+    id:'lv3', title:'Python for Data Analysis', sub:'Automate everything. Handle millions of rows.',
+    weeks:'Weeks 7–10', color:'#2dd96e', bg:'rgba(45,217,110,0.1)',
+    xp: 150,
+    project:{
+      name:'Zomato / Swiggy Restaurant Analysis',
+      desc:'Download Zomato India dataset from Kaggle. Clean it (handle nulls, wrong types, duplicates). Find: cuisine trends, price vs rating correlation, top performing areas, online vs offline orders. Create 8 charts.',
+      tools:['Python', 'Jupyter Notebook', 'Pandas', 'Matplotlib', 'Seaborn'],
+      dataset:'kaggle.com/datasets/himanshupoddar/zomato-bangalore-restaurants',
+      outcome:'A full EDA notebook uploaded to GitHub. Every recruiter will love it.'
+    },
+    topics:[
+      {id:'lv3_1', name:'Python Basics — variables, loops, conditions', tasks:['Write a for loop that prints FizzBuzz to 100','Use if/elif/else to categorize a number','Create a while loop with a break condition','Write a list comprehension to square 1–20']},
+      {id:'lv3_2', name:'Functions & Data Structures', tasks:['Write a function with default arguments','Use *args and **kwargs in a function','Build a dict and access nested values','Convert between list, set, and tuple — know when to use each']},
+      {id:'lv3_3', name:'NumPy Essentials', tasks:['Create arrays, reshape, and slice them','Perform element-wise operations on two arrays','Calculate mean, std, min, max on an array','Use np.where() to conditionally replace values']},
+      {id:'lv3_4', name:'Pandas — Load & Explore', tasks:['Load a CSV with pd.read_csv() and display head/tail','Check shape, dtypes, and null counts with .info()','Use .describe() to get summary statistics','Select columns and filter rows with boolean masks']},
+      {id:'lv3_5', name:'Pandas — GroupBy & Aggregation', tasks:['GroupBy one column and get mean of another','GroupBy multiple columns with .agg() dict','Use .transform() to add a group mean as a new column','Chain GroupBy + sort + head to get top-N per group']},
+      {id:'lv3_6', name:'Pandas — Merge, Join, Concat', tasks:['Inner merge two DataFrames on a key column','Left merge and identify unmatched rows','Concat two DataFrames vertically (same columns)','Use merge_asof() to join on nearest key (time series)']},
+      {id:'lv3_7', name:'Data Cleaning', tasks:['Drop rows where any column is null','Fill nulls with column mean/median/mode','Fix mixed data types in a column using .astype()','Remove duplicates and validate with .duplicated()']},
+      {id:'lv3_8', name:'Matplotlib — Core Charts', tasks:['Plot a line chart of a time series','Plot a grouped bar chart from aggregated data','Add title, axis labels, legend to every chart','Save a chart as PNG at 200 DPI for reports']},
+      {id:'lv3_9', name:'Seaborn — Statistical Visuals', tasks:['Build a heatmap of a correlation matrix','Build a boxplot to show outliers by category','Build a pairplot on 4 numeric columns','Use hue= to split a chart by a categorical variable']},
+      {id:'lv3_10', name:'EDA End-to-End Workflow', tasks:['Define 5 business questions before touching the data','Answer each question with code + chart + 1 insight','Identify 3 outliers and document your handling choice','Write a final 5-bullet summary of key findings']},
+    ],
+    resources:[
+      {icon:'🏆', name:'Kaggle Learn — Pandas Course', desc:'Best free Pandas course (4 hrs)', type:'free'},
+      {icon:'🎥', name:'Keith Galli — Pandas Tutorials', desc:'YouTube · Practical data analysis', type:'free'},
+      {icon:'🌐', name:'Real Python — Pandas Tutorials', desc:'Excellent written guides', type:'free'},
+      {icon:'📘', name:'Udemy — Python Bootcamp (Angela Yu)', desc:'Best Python foundations course', type:'paid'},
+    ]
+  },
+  {
+    id:'lv4', title:'Statistics That Matter', sub:'Draw correct conclusions. Think like a scientist.',
+    weeks:'Weeks 11–12', color:'#00d4c8', bg:'rgba(0,212,200,0.1)',
+    xp: 100,
+    project:{
+      name:'A/B Test Analysis',
+      desc:'Find a public A/B test dataset on Kaggle (e.g., E-commerce Clicks). Run a proper hypothesis test. Calculate p-value. Make a recommendation: "Should we launch feature X?" Write a 1-page business memo.',
+      tools:['Python', 'SciPy', 'Pandas'],
+      dataset:'kaggle.com/datasets/zhangluyuan/ab-testing',
+      outcome:'Your first statistical conclusion backed by data — very impressive in interviews.'
+    },
+    topics:[
+      {id:'lv4_1', name:'Descriptive Stats — Mean, Median, Std Dev', tasks:['Calculate mean vs median on a skewed dataset — spot the difference','Compute std dev manually on 5 values, then verify with Python','Explain in writing: when to report median instead of mean','Build a summary table with count, mean, median, std dev, min, max']},
+      {id:'lv4_2', name:'Distributions & Z-score', tasks:['Plot a histogram and identify if data is normal or skewed','Calculate Z-score for 3 data points manually','Use scipy.stats.normaltest() to check normality','Find what % of data falls within 1 and 2 std devs']},
+      {id:'lv4_3', name:'Correlation & Causation', tasks:['Calculate Pearson correlation between 2 variables','Plot a scatter plot and add a trend line','Find 1 example of correlation that is NOT causation','Report r² and explain what % of variance it explains']},
+      {id:'lv4_4', name:'Hypothesis Testing & p-value', tasks:['Define null hypothesis and alternative hypothesis for a business question','Perform a t-test with scipy.stats.ttest_ind()','Interpret p-value: what does p=0.03 mean in plain English?','Decide: reject or fail to reject null at α=0.05']},
+      {id:'lv4_5', name:'A/B Testing End-to-End', tasks:['Calculate minimum sample size needed before running a test','Split dataset into control vs treatment group','Run chi-square test for conversion rate comparison','Write a business recommendation: "Based on the data, we should..."']},
+    ],
+    resources:[
+      {icon:'🎥', name:'StatQuest (YouTube)', desc:'BEST stats explainer anywhere. Period.', type:'free'},
+      {icon:'🌐', name:'Khan Academy Statistics', desc:'Perfect for absolute beginners', type:'free'},
+      {icon:'📚', name:'Practical Statistics for Data Scientists', desc:'Book — highly recommended', type:'paid'},
+    ]
+  },
+  {
+    id:'lv5', title:'Dashboards & Storytelling', sub:'Turn numbers into decisions.',
+    weeks:'Weeks 13–15', color:'#9b72f8', bg:'rgba(155,114,248,0.1)',
+    xp: 130,
+    project:{
+      name:'IPL / HR Analytics Dashboard',
+      desc:'Build a 3-page Power BI dashboard (Overview, Drilldown, Trends) with slicers. Publish it to Power BI Service (free account). Write a 5-bullet executive summary: "3 key findings from this data."',
+      tools:['Power BI Desktop', 'Power BI Service', 'DAX'],
+      outcome:'A live published dashboard with a shareable link for LinkedIn and portfolio.'
+    },
+    topics:[
+      {id:'lv5_1', name:'Power Query — Data Transformation', tasks:['Connect Power BI to a CSV or Excel file','Remove nulls, rename columns, change data types in PQ','Merge two queries (like a SQL JOIN) inside Power Query','Create a custom column with a conditional formula']},
+      {id:'lv5_2', name:'Data Modeling — Star Schema', tasks:['Create a date table and mark it as a date table','Build a star schema with 1 fact + 2 dimension tables','Set relationships with correct cardinality (1:many)','Explain in writing: why star schema beats a flat table']},
+      {id:'lv5_3', name:'DAX Basics', tasks:['Write a CALCULATE to filter a measure by a slicer value','Write a SUM measure vs a calculated column — know the difference','Use ALL() to ignore filter context for a % of total','Create a YTD measure using TOTALYTD()']},
+      {id:'lv5_4', name:'Interactive Dashboards', tasks:['Add slicers for Date, Region, and Category','Enable drill-through from summary to detail page','Add a bookmark to toggle between two chart views','Test: does every visual respond to every slicer?']},
+      {id:'lv5_5', name:'Data Storytelling — SCQA & Exec Summary', tasks:['Structure one insight using Situation → Complication → Question → Answer','Write a 5-bullet executive summary for a dashboard','Replace a data dump table with a visual that tells the story','Practice: present your dashboard out loud in under 3 minutes']},
+    ],
+    resources:[
+      {icon:'🎥', name:'Chandoo — Power BI (YouTube)', desc:'Best free Power BI tutorials', type:'free'},
+      {icon:'🎥', name:'Guy in a Cube (YouTube)', desc:'Advanced Power BI techniques', type:'free'},
+      {icon:'📘', name:'Udemy — Microsoft Power BI Desktop', desc:'Most comprehensive Power BI course', type:'paid'},
+    ]
+  },
+  {
+    id:'lv6', title:'ML Basics + AI Tools', sub:'The 2026 edge. Work 5× faster.',
+    weeks:'Weeks 16–18', color:'#4f8ef7', bg:'rgba(79,142,247,0.1)',
+    xp: 140,
+    project:{
+      name:'Customer Churn Predictor',
+      desc:'Use Telco Customer Churn dataset from Kaggle. EDA → feature engineering → train logistic regression + random forest → compare accuracy → extract feature importance → build Power BI churn dashboard.',
+      tools:['Python', 'Scikit-learn', 'Pandas', 'Power BI'],
+      outcome:'End-to-end ML pipeline. Your most impressive portfolio project.'
+    },
+    topics:[
+      {id:'lv6_1', name:'Linear & Logistic Regression', tasks:['Train a LinearRegression model and print coefficients','Calculate R² and RMSE to evaluate regression quality','Train a LogisticRegression classifier on a binary target','Interpret coefficients: which features matter most?']},
+      {id:'lv6_2', name:'Decision Trees & Random Forest', tasks:['Train a DecisionTreeClassifier and visualize the tree','Control overfitting with max_depth parameter','Train RandomForestClassifier and compare to single tree','Extract feature importances and plot a bar chart']},
+      {id:'lv6_3', name:'Model Evaluation', tasks:['Print confusion matrix and explain TP/TN/FP/FN','Calculate accuracy, precision, recall, and F1-score','Use cross_val_score() for 5-fold cross validation','Decide: in churn prediction, is recall or precision more important?']},
+      {id:'lv6_4', name:'Clustering — K-Means', tasks:['Run KMeans with k=3 on a customer dataset','Plot the elbow curve to choose optimal k','Label each cluster and describe the customer segment','Use a scatter plot with hue=cluster to visualize segments']},
+      {id:'lv6_5', name:'AI Tools for Analysts', tasks:['Use Claude/ChatGPT to generate a SQL query from plain English','Use AI to write a pandas data cleaning script — then review it','Prompt AI to write a business explanation of a chart','Build a Python EDA script in 10 minutes using AI assistance']},
+    ],
+    resources:[
+      {icon:'🎥', name:'StatQuest — ML Series (YouTube)', desc:'Easiest ML explanations anywhere', type:'free'},
+      {icon:'🏆', name:'Kaggle — Intro to Machine Learning', desc:'Hands-on guided course (free)', type:'free'},
+      {icon:'🌐', name:'BigQuery Sandbox — no credit card', desc:'Real cloud SQL practice for free', type:'free'},
+    ]
+  },
+  {
+    id:'lv7', title:'Get the Job 💼', sub:'Portfolio, resume, apply smart.',
+    weeks:'Weeks 19–24', color:'#f472b6', bg:'rgba(244,114,182,0.1)',
+    xp: 200,
+    project:{
+      name:'Capstone — Full End-to-End Case Study',
+      desc:'Choose a real business problem (e-comm, fintech, healthcare). Python EDA + SQL analysis + ML model + Power BI dashboard + 5-slide executive presentation. This is your GitHub anchor project.',
+      tools:['Python', 'SQL', 'Power BI', 'Scikit-learn', 'PowerPoint'],
+      outcome:'Job-ready portfolio project. Show this in every interview.'
+    },
+    topics:[
+      {id:'lv7_1', name:'GitHub Portfolio Setup', tasks:['Create 4+ repos with clear, professional names','Add screenshots of every dashboard/chart to each README','Write a project README following: Problem → Approach → Tools → Findings','Pin your 6 best repos on your GitHub profile page']},
+      {id:'lv7_2', name:'LinkedIn Optimization', tasks:['Set headline to "Data Analyst | SQL | Python | Power BI"','Write a 5-sentence About section with keywords recruiters search','Add each completed project under Experience or Featured section','Connect with 30 data professionals this month']},
+      {id:'lv7_3', name:'Resume & Interview Ready', tasks:['Write a 1-page resume — quantify every bullet point (%, ₹, hours saved)','Solve 50+ SQL problems on LeetCode + StrataScratch before applying','Practice 5 case studies using SCQA framework out loud','Research every company\'s tech stack before each interview']},
+      {id:'lv7_4', name:'Certifications', tasks:['Enroll in Google Data Analytics Certificate (Coursera)','Complete at least 3 of 8 Google DA courses','Attempt Microsoft Power BI Analyst certification exam','Add both certifications to LinkedIn within a week of earning']},
+      {id:'lv7_5', name:'Apply & Negotiate', tasks:['Send 30+ tailored applications with follow-up messages','Message the hiring manager directly on LinkedIn after applying','Never accept the first offer — counter with market data from AmbitionBox','Before accepting, calculate: CTC + learning opportunity + growth path']},
+    ],
+    resources:[
+      {icon:'🏆', name:'StrataScratch', desc:'Real SQL questions from Google, Meta, Airbnb', type:'free'},
+      {icon:'🌐', name:'DataLemur', desc:'FAANG-focused SQL interview questions', type:'free'},
+      {icon:'📘', name:'Google Data Analytics Certificate (Coursera)', desc:'Most recognized DA certification', type:'paid'},
+      {icon:'📘', name:'Microsoft Power BI Data Analyst (DP-500)', desc:'Cloud-based analytics certification', type:'paid'},
+    ]
+  }
+];
+
+// All 8 skills
+const SKILLS = [
+  {id:'sql',          name:'SQL',         levelId:'lv2', icon:'🗄️'},
+  {id:'python',       name:'Python',      levelId:'lv3', icon:'🐍'},
+  {id:'excel',        name:'Excel',       levelId:'lv1', icon:'📊'},
+  {id:'statistics',   name:'Stats',       levelId:'lv4', icon:'📉'},
+  {id:'powerbi',      name:'Power BI',    levelId:'lv5', icon:'📈'},
+  {id:'ml',           name:'ML/AI',       levelId:'lv6', icon:'🤖'},
+  {id:'storytelling', name:'Storytelling',levelId:'lv5', icon:'🎯'},
+  {id:'cloud',        name:'Cloud/Big',   levelId:'lv6', icon:'☁️'},
+];
+
+// Projects data (full structured)
+const PROJECTS = {
+  beginner: [
+    {
+      icon:'🏪', bg:'rgba(255,107,53,0.1)', name:'Superstore Sales Dashboard',
+      level:'Beginner', tools:['Excel','Pivot Tables','Charts'],
+      problem:'A retail manager needs a single-page summary to answer: Which region generates highest profit? Which product category is declining? What is the monthly sales trend?',
+      dataset:'Sample Superstore CSV — kaggle.com/datasets/vivek468/superstore-dataset-final',
+      steps:['Load CSV into Excel / Google Sheets','Build Pivot Table: Sales & Profit by Region and Category','Create 4 charts: Bar (Region), Line (Monthly trend), Pie (Segment), Scatter (Sales vs Profit)','Add 3 slicers: Year, Region, Category','Write 5 one-line business findings below the dashboard'],
+      expectedOutput:'1 Excel file with dashboard sheet + 5 written findings. Screenshot → LinkedIn post.',
+      desc:'Build a complete Excel dashboard answering 3 business questions using only Pivot Tables, slicers, and charts. No code required.',
+      outcome:'Your first real dashboard. Screenshot → LinkedIn → GitHub.'
+    },
+    {
+      icon:'🛒', bg:'rgba(249,197,53,0.1)', name:'E-Commerce SQL Analysis',
+      level:'Beginner', tools:['SQLite','DB Browser for SQLite'],
+      problem:'A business analyst must answer 10 questions from order data: top customers, revenue by country, monthly order trends, and product category performance.',
+      dataset:'Northwind Database — github.com/jpwhite3/northwind-SQLite3 (free, no sign-in)',
+      steps:['Import Northwind .db into DB Browser for SQLite','Write 10 queries covering SELECT, WHERE, GROUP BY, ORDER BY, JOIN','Answer: Top 5 revenue customers, monthly order count, revenue by country, top product categories','Export results to CSV, paste into Excel, create 2 charts','Write a 1-page PDF findings report'],
+      expectedOutput:'10 working SQL queries + CSV exports + 1-page PDF report. Add .sql file to GitHub.',
+      desc:'Use the Northwind database to answer 10 real business questions using SELECT, JOIN, GROUP BY. Document findings in a short report.',
+      outcome:'SQL portfolio piece showing business thinking.'
+    },
+    {
+      icon:'🎬', bg:'rgba(0,212,200,0.1)', name:'Netflix Content EDA',
+      level:'Beginner', tools:['Python','Pandas','Matplotlib','Seaborn'],
+      problem:'Netflix wants to understand content strategy: Which genres dominate? Which countries produce the most content? Has content volume grown year over year?',
+      dataset:'Netflix Movies & TV Shows — kaggle.com/datasets/shivamb/netflix-shows',
+      steps:['Load CSV with pd.read_csv(), run .info() and .describe()','Clean: drop nulls, fix date formats, split multi-value columns','Answer 5 questions with code + chart + 1-sentence insight each','Charts: Bar (top genres), Line (content per year), Pie (Movie vs TV), Heatmap (content by country+year)','Push Jupyter notebook to GitHub with clear markdown commentary'],
+      expectedOutput:'Jupyter notebook with 6 charts, 5 written insights, clean GitHub README. Share on LinkedIn.',
+      desc:'Clean and analyse the Netflix dataset. Answer 5 business questions. Create 6 clean visualizations. Write 5 business conclusions.',
+      outcome:'Your first Python portfolio piece on GitHub.'
+    }
+  ],
+  intermediate: [
+    {
+      icon:'🍽️', bg:'rgba(45,217,110,0.1)', name:'Zomato Restaurant Analysis',
+      level:'Intermediate', tools:['Python','Pandas','Seaborn','Plotly'],
+      problem:'A restaurant chain wants to know: Does higher price = higher rating? Which cuisines are underserved in top cities? Do online-order restaurants outperform offline-only?',
+      dataset:'Zomato India Dataset — kaggle.com/datasets/himanshupoddar/zomato-bangalore-restaurants',
+      steps:['Clean dataset: handle nulls, fix rate column (Remove "/5"), standardise cost column','EDA: price vs rating scatter, cuisine frequency bar chart, online vs offline boxplot','Build Plotly choropleth or bar chart showing restaurant density by area','Write 5 business recommendations (e.g. "Open Italian cuisine in Koramangala — high demand, low supply")','Export final Plotly chart as HTML, embed in GitHub README'],
+      expectedOutput:'Notebook + interactive Plotly HTML chart + 5-point business recommendation section.',
+      desc:'Deep-dive into a real messy Indian dataset. Clean it, find price-rating patterns, cuisine trends, and geographic gaps. Build interactive Plotly visuals.',
+      outcome:'Demonstrates real data wrangling skills recruiters test for.'
+    },
+    {
+      icon:'🏏', bg:'rgba(155,114,248,0.1)', name:'IPL Analytics Dashboard',
+      level:'Intermediate', tools:['Power BI','DAX','Power Query'],
+      problem:'A sports broadcaster wants a live dashboard: Which teams are most consistent winners? Who are the top run-scorers and wicket-takers? Which venues produce highest scores?',
+      dataset:'IPL Complete Dataset — kaggle.com/datasets/patrickb1912/ipl-complete-dataset-20082020',
+      steps:['Load both CSVs into Power Query, clean and merge on match_id','Build star schema: Fact (deliveries) + 2 Dims (matches, teams)','Page 1: Team win % by season (bar) + win by runs vs wickets (donut)','Page 2: Top 10 batsmen by total runs (horizontal bar) + strike rate table','Page 3: Top bowlers by wickets + economy rate scatter','Add slicers: Season, Team, Venue. Publish to Power BI Service'],
+      expectedOutput:'3-page published Power BI report with live URL. Add URL to LinkedIn + GitHub README.',
+      desc:'Build a 3-page Power BI report on IPL data. Model the data as a star schema, write DAX measures, and publish a live dashboard link.',
+      outcome:'A live published link to share with recruiters. Very impressive.'
+    },
+    {
+      icon:'🧪', bg:'rgba(0,212,200,0.1)', name:'A/B Test — Landing Page',
+      level:'Intermediate', tools:['Python','SciPy','Pandas','Matplotlib'],
+      problem:'An e-commerce team ran a 30-day A/B test on a new landing page. Did the new page statistically significantly increase conversion rate? Should they launch it?',
+      dataset:'A/B Testing Dataset — kaggle.com/datasets/zhangluyuan/ab-testing (e-commerce clicks)',
+      steps:['Load data, check sample sizes and date range coverage','Calculate conversion rate for control vs treatment groups','Run two-proportion z-test with scipy.stats','Check p-value at α=0.05 — reject or fail to reject null','Calculate practical significance: what is the revenue impact if rolled out?','Write a 1-page business memo: "We recommend launching / not launching because..."'],
+      expectedOutput:'Notebook with test results + 1-page business memo PDF. This demonstrates statistical thinking.',
+      desc:'Run a real A/B test from raw data to business recommendation. Calculate p-values, interpret statistical significance, write an executive memo.',
+      outcome:'Shows statistical thinking — separates good analysts from great ones.'
+    }
+  ],
+  advanced: [
+    {
+      icon:'📱', bg:'rgba(79,142,247,0.1)', name:'Customer Churn Predictor',
+      level:'Advanced', tools:['Python','Scikit-learn','Power BI'],
+      problem:'A telecom company loses 15% of customers monthly. Build a model to predict who will churn next month, identify top churn drivers, and give the retention team an actionable dashboard.',
+      dataset:'Telco Customer Churn — kaggle.com/datasets/blastchar/telco-customer-churn',
+      steps:['EDA: churn rate by tenure, contract type, payment method','Feature engineering: encode categoricals, create tenure buckets','Train Logistic Regression + Random Forest, compare accuracy + recall','Extract top 10 feature importances, plot bar chart','Build Power BI dashboard: Churn Rate KPI, Churn by Contract (bar), Feature Importance (bar), Churn Risk Table','Write 3 retention recommendations based on model findings'],
+      expectedOutput:'Python notebook + Power BI .pbix file + 3-point recommendation. Gold standard portfolio piece.',
+      desc:'End-to-end ML + BI project. EDA → feature engineering → 2 models → Power BI churn dashboard → business recommendations.',
+      outcome:'End-to-end ML + BI project. The gold standard portfolio piece.'
+    },
+    {
+      icon:'🏦', bg:'rgba(244,114,182,0.1)', name:'Credit Risk Scorecard',
+      level:'Advanced', tools:['Python','SQL','Scikit-learn','SHAP'],
+      problem:'A fintech lender needs a credit scoring model. Which applicant features predict default? How explainable is the model to regulators and business stakeholders?',
+      dataset:'Home Credit Default Risk (lite version) — kaggle.com/datasets/gauravduttakiit/loan-defaulter',
+      steps:['SQL: extract applicant features from 3 tables using CTEs','Python EDA: default rate by income bracket, age group, loan type','Feature engineering: debt-to-income ratio, credit utilisation','Train Logistic Regression + XGBoost, compare AUC-ROC','Run SHAP analysis — plot beeswarm + waterfall for 1 applicant','Write executive risk report: top 3 default predictors + model limitations'],
+      expectedOutput:'SQL file + Python notebook + SHAP charts + 1-page risk report. Finance/banking interview standout.',
+      desc:'Build an explainable credit risk model. SQL data extraction → Python EDA → model comparison → SHAP explainability → executive risk report.',
+      outcome:'Finance/banking industry favorite. Very high interview impact.'
+    },
+    {
+      icon:'🛍', bg:'rgba(249,197,53,0.1)', name:'Retail Demand Forecasting',
+      level:'Advanced', tools:['Python','Prophet','Power BI'],
+      problem:'A retail chain needs to forecast weekly sales for the next 12 weeks per store to optimise inventory. How accurate can a model be, and how do we communicate uncertainty to operations?',
+      dataset:'Rossmann Store Sales — kaggle.com/competitions/rossmann-store-sales/data',
+      steps:['Load and explore 1M+ row dataset, check missing dates and store closures','Engineer features: promo flag, holiday flag, competition distance buckets','Train Facebook Prophet model on 1 store, tune changepoint_prior_scale','Evaluate with MAPE on 8-week holdout set (target < 15% MAPE)','Forecast 12 weeks ahead for 5 stores, plot actual vs forecast with confidence interval','Build Power BI dashboard: Forecast vs Actual line chart, MAPE KPI, Store selector slicer'],
+      expectedOutput:'Notebook + Power BI .pbix with forecast dashboard. Rare skill — almost no junior DAs can do this.',
+      desc:'Build a time-series demand forecast using Facebook Prophet. Evaluate accuracy, visualise uncertainty, and present results in a Power BI operational dashboard.',
+      outcome:'Rare skill — almost no junior DAs can do forecasting. Huge differentiator.'
+    }
+  ]
+};
+
+const PORTFOLIO_TIPS = [
+  { icon:'📁', title:'4+ GitHub Repos Minimum', text:'Quality over quantity. Each repo needs a proper README with screenshots, problem statement, tools used, and 3-5 key insights.' },
+  { icon:'🖼', title:'Screenshot Everything', text:'Add screenshots of your dashboards and charts to GitHub READMEs. Recruiters spend 30 seconds on your profile — visuals are everything.' },
+  { icon:'🔗', title:'Live Links Are Gold', text:'Publish Power BI dashboards to PBI Service. Deploy Tableau to Tableau Public. Add these live links everywhere — resume, LinkedIn, GitHub.' },
+  { icon:'📝', title:'Always Write Business Insights', text:'Don\'t just submit code. Always add a "Key Findings" section: "Revenue in Q3 dropped 18% due to..." That\'s what analysts actually DO.' },
+  { icon:'🌐', title:'LinkedIn Post Every Project', text:'Post a 150-word LinkedIn update for each project. Add a screenshot. Tag tools used. This gets you recruiter attention passively.' },
+];
+
+const GITHUB_TIPS = [
+  { icon:'📌', title:'Pin Your Best 6 Repos', text:'GitHub lets you pin repos. Pin your best 6 projects. First impression matters — make every pinned repo look polished.' },
+  { icon:'⭐', title:'Star Your Own Best Repos', text:'Add topics/tags to repos (e.g., "data-analysis", "python", "sql"). This makes your profile discoverable in GitHub search.' },
+  { icon:'📄', title:'README Formula That Works', text:'Use this structure: 1) Problem Statement 2) Dataset source 3) Tools used 4) Key findings (3–5 bullets) 5) Screenshot 6) How to run.' },
+  { icon:'🌿', title:'Keep Your Green Grid Active', text:'Commit something every day — even if it\'s just updating a README or adding a comment. A full green contribution grid signals consistency.' },
+];
+
+// SQL Drills — 20 questions
+const SQL_DRILLS = [
+  {id:'sq1',  q:'Find the 2nd highest salary in the employees table', level:'easy'},
+  {id:'sq2',  q:'Calculate month-over-month revenue growth % using LAG()', level:'medium'},
+  {id:'sq3',  q:'Find users who were active on 3 consecutive days', level:'hard'},
+  {id:'sq4',  q:'Get top 3 customers by revenue for each region using RANK() PARTITION BY', level:'medium'},
+  {id:'sq5',  q:'Find all duplicate email records in the users table', level:'easy'},
+  {id:'sq6',  q:'Calculate a 7-day rolling average of daily sales', level:'hard'},
+  {id:'sq7',  q:'Retention rate: users from month 1 still active in month 3', level:'hard'},
+  {id:'sq8',  q:'Write a query to unpivot monthly columns into rows (UNION ALL)', level:'medium'},
+  {id:'sq9',  q:'CTE: find all products with sales above average in their category', level:'medium'},
+  {id:'sq10', q:'Calculate DAU/MAU ratio for the last 30 days', level:'hard'},
+  {id:'sq11', q:'Delete all rows except the latest record per user_id', level:'medium'},
+  {id:'sq12', q:'Find managers who earn less than at least one of their direct reports', level:'hard'},
+  {id:'sq13', q:'Write a query using CASE WHEN to bucket customers into High/Mid/Low value', level:'easy'},
+  {id:'sq14', q:'Calculate running total of sales per region ordered by date', level:'medium'},
+  {id:'sq15', q:'Find products never ordered using a LEFT JOIN + IS NULL pattern', level:'easy'},
+  {id:'sq16', q:'Get the percentage of total for each category in a single query', level:'medium'},
+  {id:'sq17', q:'Find the most common value (mode) in a column without built-in MODE()', level:'medium'},
+  {id:'sq18', q:'Write a query to detect gaps in sequential ID numbers', level:'hard'},
+  {id:'sq19', q:'Get every employee who joined in the same month as their manager', level:'medium'},
+  {id:'sq20', q:'Calculate cohort retention: % of week-1 users still active in week 4', level:'hard'},
+];
+
+// Case Studies
+const CASE_STUDIES = [
+  {
+    color:'#ff6b35', num:'01',
+    title:'Food Delivery Drop in Orders',
+    body:'A food delivery company\'s orders dropped 22% in one city over 3 weeks. As a DA, how would you investigate this? What data would you pull first? What 3 hypotheses would you test?',
+    hint:'Think: seasonality, competitor promos, pricing changes, supply (driver availability), delivery times, app changes. Always start with "what changed 3 weeks ago?"'
+  },
+  {
+    color:'#f9c535', num:'02',
+    title:'Which Marketing Channel to Invest In?',
+    body:'Your company spends ₹50L/month across Google Ads, Facebook, Instagram, and influencers. CMO asks: "Which channel gives the best return?" What analysis would you do?',
+    hint:'CAC (Cost per Acquisition) per channel, LTV of customers acquired per channel, attribution modeling (last touch vs multi-touch), seasonality effects. Present a recommendation with ₹ numbers.'
+  },
+  {
+    color:'#2dd96e', num:'03',
+    title:'High User Churn on Mobile App',
+    body:'30% of users who sign up for a fintech app never return after day 1. The product team asks you to figure out why. What would your analysis look like?',
+    hint:'Funnel analysis (where do users drop in onboarding?), cohort analysis (which acquisition channels have worst retention?), session recording analysis, compare churned vs retained users — what\'s different?'
+  },
+  {
+    color:'#9b72f8', num:'04',
+    title:'Should We Launch in Tier-2 Cities?',
+    body:'Your e-commerce company operates in 6 metro cities. The strategy team asks: "Should we expand to 50 Tier-2 cities next quarter?" You have 6 months of data. Make a recommendation.',
+    hint:'Unit economics: revenue per order, delivery cost, return rate. Demand signals: search trends, competitor presence, average order value benchmarks. Risk analysis. Phased rollout recommendation.'
+  },
+  {
+    color:'#4f8ef7', num:'05',
+    title:'Why Are Sales Dipping on Weekends?',
+    body:'A retail brand\'s online sales are consistently 35% lower on Saturdays and Sundays compared to weekdays. The CEO asks you to "figure this out." Where do you start?',
+    hint:'Day-of-week analysis across channels (web vs app vs stores). Traffic data vs conversion rate. Compare with competitor/industry benchmarks. Customer demographics by day. Marketing activity calendar.'
+  },
+];
+
+// Interview Tips
+const INTERVIEW_TIPS = [
+  { title:'SQL is non-negotiable', text:'90% of DA interviews have a SQL round. Practice every day for 30+ days before applying. StrataScratch + DataLemur + LeetCode SQL is your trinity.' },
+  { title:'SCQA Framework for case studies', text:'Situation → Complication → Question → Answer. Structure every case study answer with this. It shows consulting-style thinking.' },
+  { title:'Always ask clarifying questions', text:'When given a case study, pause and ask: "What metric matters most to the business here? What data do I have access to?" This impresses interviewers.' },
+  { title:'Quantify everything in your resume', text:'Not "improved dashboard" → "Built Power BI dashboard reducing weekly reporting time from 4 hours to 20 minutes." Numbers = credibility.' },
+  { title:'Research the company\'s data stack', text:'Look at their job listings, LinkedIn, engineering blogs. Know if they use Redshift, BigQuery, Snowflake, Tableau, or Power BI before the interview.' },
+  { title:'Have a "tell me about a project" story ready', text:'For every project, memorize: Problem → Approach → Tools → Key Finding → Business Impact. Practice telling it in under 2 minutes.' },
+  { title:'Business metrics are mandatory knowledge', text:'Know by heart: CAC, LTV, Churn Rate, NPS, Conversion Rate, Retention Rate, ARR, GMV, DAU/MAU. These come up in every interview.' },
+  { title:'Handle "I don\'t know" gracefully', text:'Say: "I haven\'t worked with that specific tool, but I\'ve used X which has similar concepts. I\'m a fast learner — here\'s how I would approach it..."' },
+];
+
+const JOB_PLAN = [
+  {
+    num:1, color:'#ff6b35', title:'Month 1–2: Build the Core',
+    body:'SQL + Excel + Python basics. These 3 skills alone qualify you for 70% of junior DA roles.',
+    tasks:[
+      {id:'jp1', text:'Complete Level 1 (Excel) fully — all 10 topics'},
+      {id:'jp2', text:'Complete Level 2 (SQL basics to window functions)'},
+      {id:'jp3', text:'Start Level 3 (Python + Pandas + EDA)'},
+      {id:'jp4', text:'Create GitHub profile + first repo today'},
+    ]
+  },
+  {
+    num:2, color:'#f9c535', title:'Month 3: Dashboards + First Projects',
+    body:'Power BI is the #1 demanded BI tool in India. Get at least 1 live dashboard out this month.',
+    tasks:[
+      {id:'jp5', text:'Complete Level 4 (Statistics + A/B test project)'},
+      {id:'jp6', text:'Complete Level 5 (Power BI dashboard — publish live)'},
+      {id:'jp7', text:'Push 2 projects to GitHub with screenshots & READMEs'},
+      {id:'jp8', text:'Set up LinkedIn with "Data Analyst" headline + profile photo'},
+    ]
+  },
+  {
+    num:3, color:'#2dd96e', title:'Month 4: Start Applying NOW',
+    body:'Don\'t wait to feel "ready". Apply from month 4 — internships, junior roles, freelance projects.',
+    tasks:[
+      {id:'jp9',  text:'Apply to 10+ internships/junior roles this month'},
+      {id:'jp10', text:'Post 1 project insight on LinkedIn this week'},
+      {id:'jp11', text:'Message 10 DA professionals for 15-min coffee chats'},
+      {id:'jp12', text:'Start solving 2 SQL problems every single day'},
+    ]
+  },
+  {
+    num:4, color:'#9b72f8', title:'Month 5: Advanced Skills + Polish',
+    body:'ML + AI tools is what makes your resume stand out from 100 other applicants.',
+    tasks:[
+      {id:'jp13', text:'Complete Level 6 (ML basics + BigQuery + AI tools)'},
+      {id:'jp14', text:'Build Capstone project (end-to-end case study)'},
+      {id:'jp15', text:'Get Google Data Analytics Certificate (Coursera)'},
+      {id:'jp16', text:'Apply to 20+ full-time roles with tailored cover letters'},
+    ]
+  },
+  {
+    num:5, color:'#4f8ef7', title:'Month 6: Interview Season',
+    body:'Crack the SQL round, ace the case study, negotiate the offer.',
+    tasks:[
+      {id:'jp17', text:'Solve 50+ SQL problems on LeetCode + StrataScratch'},
+      {id:'jp18', text:'Practice 5 case studies using SCQA framework out loud'},
+      {id:'jp19', text:'Research every target company\'s data stack before interview'},
+      {id:'jp20', text:'Accept the right offer — don\'t lowball yourself!'},
+    ]
+  }
+];
+
+const COMPANIES = [
+  'Swiggy','Zomato','Razorpay','Zepto','PhonePe','Meesho','CRED','ShareChat',
+  'Freshworks','Zoho','Infosys (DA)','Wipro Analytics','TCS (DA)','Accenture',
+  'Deloitte','EY GDS','Byju\'s','Unacademy','OYO','Ola','Flipkart','Amazon India',
+  'Paytm','HDFC Bank','Axis Bank','Groww'
+];
+
+const TIPS = [
+  'Solve 2 SQL problems daily — it\'s the #1 interview skill!',
+  'Build projects with real messy data, not clean toy datasets.',
+  'Start LinkedIn now. Recruiters find YOU, not the other way.',
+  'After every project, write 5 business insights. That\'s the skill.',
+  'Apply from Month 4 — don\'t wait to feel "ready".',
+  'Use ChatGPT/Claude to draft SQL queries, then refine. 5× faster.',
+  'The SCQA framework wins case study interviews every time.',
+  'A bad dashboard with good insights beats a pretty one with none.',
+  'Your MCA background = coding skills most DAs don\'t have!',
+  'Research every company\'s data stack before each interview.',
+  'Statistics separates analysts from chart-makers. Take it seriously.',
+  'Power BI is the #1 in-demand BI tool in India. Master it first.',
+  'Post your projects on LinkedIn — recruiters DM daily.',
+  'Kaggle competitions count as experience. Do 2-3 before applying.',
+  'CAC, LTV, Churn — know every business metric by heart.',
+];
+
+// ============================================================
+// STATE MANAGEMENT — localStorage
+// ============================================================
+const STORAGE_KEY = 'ibbani_da_v4';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const saved = JSON.parse(raw);
+    return {
+      topics:       saved.topics       || {},
+      subTasks:     saved.subTasks     || {},
+      skillRatings: saved.skillRatings || {},
+      jobTasks:     saved.jobTasks     || {},
+      sqlSolved:    saved.sqlSolved    || {},
+      streak:       saved.streak       || 0,
+      lastStudy:    saved.lastStudy    || null,
+      studyDays:    saved.studyDays    || [],
+      xp:           saved.xp           || 0,
+      userName:     saved.userName     || 'Ibbani',
+      pin:          saved.pin          || null,
+    };
+  } catch(e) {
+    console.warn('State load failed:', e);
+    return defaultState();
+  }
+}
+
+function defaultState() {
+  return {
+    topics:{}, subTasks:{}, skillRatings:{}, jobTasks:{}, sqlSolved:{},
+    streak:0, lastStudy:null, studyDays:[], xp:0,
+    userName:'Ibbani', pin:null
+  };
+}
+
+// Fix #4 — Storage health check
+function checkStorageHealth() {
+  try {
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+    // Check remaining quota estimate
+    let totalSize = 0;
+    for (const key of Object.keys(localStorage)) {
+      totalSize += (localStorage.getItem(key) || '').length + key.length;
+    }
+    const estimatedKB = Math.round(totalSize / 1024);
+    if (estimatedKB > 4000) {
+      showStorageWarning('⚠️ Storage nearly full (' + estimatedKB + 'KB / ~5MB). Export your data from Settings before it\'s lost.');
+    }
+  } catch(e) {
+    // localStorage not available or full
+    showStorageWarning('⚠️ Storage unavailable! Your progress CANNOT be saved. Check browser settings or switch to a non-private window.');
+  }
+}
+
+function showStorageWarning(msg) {
+  // Inject warning banner if not already present
+  if (document.getElementById('storageWarning')) return;
+  const banner = document.createElement('div');
+  banner.id = 'storageWarning';
+  banner.style.cssText = 'position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#7c1d1d;color:#fca5a5;border:1px solid rgba(240,82,82,0.5);border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;z-index:5000;max-width:440px;width:calc(100% - 32px);text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);cursor:pointer;';
+  banner.textContent = msg + ' (tap to dismiss)';
+  banner.onclick = () => banner.remove();
+  document.body.appendChild(banner);
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e) {
+    showStorageWarning('⚠️ SAVE FAILED — storage full or blocked! Your progress was NOT saved. Free up space or use a different browser.');
+    console.error('Storage save failed:', e);
+  }
+}
+
+function migrateOldData() {
+  try {
+    // Migrate from v3 key → v4 key (no data loss on upgrade)
+    const v3data = localStorage.getItem('ibbani_da_v3');
+    if (v3data && !localStorage.getItem(STORAGE_KEY)) {
+      const parsed = JSON.parse(v3data);
+      state.topics       = parsed.topics       || {};
+      state.subTasks     = parsed.subTasks     || {};
+      state.skillRatings = parsed.skillRatings || {};
+      state.jobTasks     = parsed.jobTasks     || {};
+      state.sqlSolved    = parsed.sqlSolved    || {};
+      state.streak       = parsed.streak       || 0;
+      state.lastStudy    = parsed.lastStudy    || null;
+      state.studyDays    = parsed.studyDays    || [];
+      state.xp           = parsed.xp           || 0;
+      state.userName     = parsed.userName     || 'Ibbani';
+      state.pin          = parsed.pin          || null;
+      saveState();
+    }
+    // Also check legacy v1 key
+    const old = localStorage.getItem('ibbani_da_state');
+    if (old && !localStorage.getItem(STORAGE_KEY)) {
+      const parsed = JSON.parse(old);
+      state.topics       = parsed.topics       || {};
+      state.subTasks     = parsed.subTasks     || {};
+      state.skillRatings = parsed.skillRatings || {};
+      state.jobTasks     = parsed.jobTasks     || {};
+      state.sqlSolved    = parsed.sqlSolved    || {};
+      state.streak       = parsed.streak       || 0;
+      saveState();
+    }
+  } catch(e) {}
+}
+
+let state = loadState();
+migrateOldData();
+
+// ============================================================
+// PIN LOCK SYSTEM
+// ============================================================
+let pinBuffer = '';
+let pinMode = 'enter'; // 'enter' | 'set' | 'confirm' | 'change' | 'change-confirm'
+let pinTemp = '';
+let pinAttempts = 0;
+let pinLockedUntil = 0;
+let pinLockTimer = null;
+
+function initPin() {
+  if (!state.pin) {
+    // First time — set PIN
+    pinMode = 'set';
+    document.getElementById('pinTitle').textContent = 'Set Your PIN';
+    document.getElementById('pinSub').textContent = 'Create a 4-digit PIN to protect your app';
+    document.getElementById('pinFooter').style.display = 'none';
+  } else {
+    pinMode = 'enter';
+    document.getElementById('pinTitle').textContent = 'Welcome back, ' + state.userName + ' 👋';
+    document.getElementById('pinSub').textContent = 'Enter your 4-digit PIN';
+    document.getElementById('pinFooter').style.display = 'block';
+  }
+  pinBuffer = '';
+  updatePinDots();
+}
+
+function pinInput(digit) {
+  // Block input while locked
+  if (pinMode === 'enter' && pinLockedUntil > Date.now()) {
+    const secs = Math.ceil((pinLockedUntil - Date.now()) / 1000);
+    showPinError('🔒 Locked. Try again in ' + secs + 's');
+    return;
+  }
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += digit;
+  updatePinDots();
+  if (pinBuffer.length === 4) {
+    setTimeout(() => processPin(), 200);
+  }
+}
+
+function pinBackspace() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  updatePinDots();
+  document.getElementById('pinError').textContent = '';
+}
+
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('pd' + i);
+    dot.classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+
+function processPin() {
+  if (pinMode === 'enter') {
+    // Check lockout
+    const now = Date.now();
+    if (pinLockedUntil > now) {
+      const secs = Math.ceil((pinLockedUntil - now) / 1000);
+      showPinError('🔒 Locked. Try again in ' + secs + 's');
+      pinBuffer = '';
+      updatePinDots();
+      return;
+    }
+    if (pinBuffer === state.pin) {
+      pinAttempts = 0;
+      pinLockedUntil = 0;
+      document.getElementById('pinScreen').classList.add('hidden');
+      document.getElementById('app').classList.add('unlocked');
+      renderAll();
+    } else {
+      pinAttempts++;
+      pinBuffer = '';
+      updatePinDots();
+      const remaining = 5 - pinAttempts;
+      if (pinAttempts >= 5) {
+        pinLockedUntil = Date.now() + 30000;
+        pinAttempts = 0;
+        showPinError('🔒 5 wrong attempts. Locked for 30 seconds.');
+        // Start countdown display
+        if (pinLockTimer) clearInterval(pinLockTimer);
+        pinLockTimer = setInterval(() => {
+          const rem = Math.ceil((pinLockedUntil - Date.now()) / 1000);
+          if (rem <= 0) {
+            clearInterval(pinLockTimer);
+            document.getElementById('pinError').textContent = '';
+          } else {
+            document.getElementById('pinError').textContent = '🔒 Locked. Try again in ' + rem + 's';
+          }
+        }, 1000);
+      } else {
+        showPinError('Wrong PIN. ' + remaining + ' attempt' + (remaining === 1 ? '' : 's') + ' left.');
+      }
+    }
+  } else if (pinMode === 'set') {
+    pinTemp = pinBuffer;
+    pinBuffer = '';
+    updatePinDots();
+    pinMode = 'confirm';
+    document.getElementById('pinTitle').textContent = 'Confirm Your PIN';
+    document.getElementById('pinSub').textContent = 'Enter the same PIN again to confirm';
+    document.getElementById('pinError').textContent = '';
+  } else if (pinMode === 'confirm') {
+    if (pinBuffer === pinTemp) {
+      state.pin = pinBuffer;
+      saveState();
+      document.getElementById('pinScreen').classList.add('hidden');
+      document.getElementById('app').classList.add('unlocked');
+      renderAll();
+      showToast('🔐 PIN set successfully!');
+    } else {
+      showPinError('PINs don\'t match. Try again.');
+      pinBuffer = '';
+      pinTemp = '';
+      pinMode = 'set';
+      document.getElementById('pinTitle').textContent = 'Set Your PIN';
+      document.getElementById('pinSub').textContent = 'Create a 4-digit PIN';
+      updatePinDots();
+    }
+  } else if (pinMode === 'change') {
+    if (pinBuffer === state.pin) {
+      pinTemp = '';
+      pinBuffer = '';
+      updatePinDots();
+      pinMode = 'change-confirm';
+      document.getElementById('pinTitle').textContent = 'New PIN';
+      document.getElementById('pinSub').textContent = 'Enter your new 4-digit PIN';
+      document.getElementById('pinError').textContent = '';
+    } else {
+      showPinError('Wrong current PIN.');
+      pinBuffer = '';
+      updatePinDots();
+    }
+  } else if (pinMode === 'change-confirm') {
+    if (pinTemp === '') {
+      pinTemp = pinBuffer;
+      pinBuffer = '';
+      updatePinDots();
+      document.getElementById('pinTitle').textContent = 'Confirm New PIN';
+      document.getElementById('pinSub').textContent = 'Enter the same new PIN again';
+      document.getElementById('pinError').textContent = '';
+    } else {
+      if (pinBuffer === pinTemp) {
+        state.pin = pinBuffer;
+        saveState();
+        document.getElementById('pinScreen').classList.add('hidden');
+        document.getElementById('app').classList.add('unlocked');
+        showToast('🔐 PIN changed!');
+      } else {
+        showPinError('PINs don\'t match. Try again.');
+        pinBuffer = ''; pinTemp = '';
+        document.getElementById('pinTitle').textContent = 'New PIN';
+        document.getElementById('pinSub').textContent = 'Enter your new 4-digit PIN';
+        updatePinDots();
+      }
+    }
+  }
+}
+
+function showPinError(msg) {
+  const el = document.getElementById('pinError');
+  el.textContent = msg;
+  el.style.opacity = '1';
+  // Don't auto-fade lockout messages — they show countdown
+  if (!msg.includes('Locked')) {
+    setTimeout(() => { if (el.textContent === msg) el.style.opacity = '0'; }, 2500);
+  }
+}
+
+function pinForgot() {
+  // Require typing app owner name as confirmation — not just a single click bypass
+  const answer = prompt('To reset PIN, type your name (as set in Settings) exactly:');
+  if (answer === null) return; // cancelled
+  const expected = (state.userName || 'Ibbani').trim().toLowerCase();
+  if (answer.trim().toLowerCase() !== expected) {
+    alert('Name did not match. PIN reset cancelled.');
+    return;
+  }
+  state.pin = null;
+  saveState();
+  pinAttempts = 0;
+  pinLockedUntil = 0;
+  if (pinLockTimer) { clearInterval(pinLockTimer); pinLockTimer = null; }
+  pinMode = 'set';
+  pinBuffer = '';
+  pinTemp = '';
+  document.getElementById('pinTitle').textContent = 'Set New PIN';
+  document.getElementById('pinSub').textContent = 'Create a new 4-digit PIN';
+  document.getElementById('pinFooter').style.display = 'none';
+  document.getElementById('pinError').textContent = '';
+  updatePinDots();
+  showToast('PIN reset. Set a new one.');
+}
+
+function changePin() {
+  const ps = document.getElementById('pinScreen');
+  ps.classList.remove('hidden');
+  pinMode = 'change';
+  pinBuffer = '';
+  pinTemp = '';
+  updatePinDots();
+  document.getElementById('pinTitle').textContent = 'Change PIN';
+  document.getElementById('pinSub').textContent = 'Enter your current PIN first';
+  document.getElementById('pinFooter').style.display = 'none';
+  document.getElementById('pinError').textContent = '';
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + name);
+  if (pageEl) pageEl.classList.add('active');
+  const navEl = document.querySelector('[data-page="' + name + '"]');
+  if (navEl) navEl.classList.add('active');
+
+  if (name === 'home')      renderHome();
+  if (name === 'roadmap')   renderRoadmap();
+  if (name === 'tracker')   renderTracker();
+  if (name === 'projects')  renderProjects();
+  if (name === 'interview') renderInterview();
+  if (name === 'job')       renderJobPlan();
+  if (name === 'settings')  renderSettings();
+
+  window.scrollTo(0, 0);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function getAllTopics() {
+  return LEVELS.flatMap(l => l.topics);
+}
+
+function getCurrentLevel() {
+  for (const lv of LEVELS) {
+    const done = lv.topics.filter(t => state.topics[t.id] === 'done').length;
+    if (done < lv.topics.length) return lv;
+  }
+  return LEVELS[LEVELS.length - 1];
+}
+
+function calcXP() {
+  let xp = 0;
+  LEVELS.forEach(lv => {
+    const done = lv.topics.filter(t => state.topics[t.id] === 'done').length;
+    xp += done * Math.round(lv.xp / lv.topics.length);
+  });
+  // Bonus XP from job tasks
+  Object.values(state.jobTasks).filter(Boolean).forEach(() => xp += 5);
+  // Bonus from SQL drills
+  Object.values(state.sqlSolved).filter(Boolean).forEach(() => xp += 8);
+  return xp;
+}
+
+function updateXPBadge() {
+  const xp = calcXP();
+  document.getElementById('xpBadge').textContent = '⚡ ' + xp + ' XP';
+  document.getElementById('strkXP').textContent = xp;
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ============================================================
+// FIX #3 — DAILY_FLOW weekly schedule & Suggested Next
+// ============================================================
+const DAILY_FLOW = [
+  { day:'Mon', label:'Monday',   icon:'🗄️', focus:'SQL Practice',        detail:'Solve 2 SQL problems on LeetCode or StrataScratch. Focus on window functions & CTEs.' },
+  { day:'Tue', label:'Tuesday',  icon:'🐍', focus:'Python / EDA',        detail:'Work through current Python or Pandas topic. Write code + produce at least 1 chart.' },
+  { day:'Wed', label:'Wednesday',icon:'📊', focus:'Excel / Power BI',    detail:'Build or improve a dashboard. Practice DAX or Pivot Tables. Push progress to GitHub.' },
+  { day:'Thu', label:'Thursday', icon:'🗄️', focus:'SQL Practice',        detail:'Another 2 SQL problems. Try Medium or Hard level. Review any wrong answers carefully.' },
+  { day:'Fri', label:'Friday',   icon:'📋', focus:'Case Study / Stats',  detail:'Practice 1 business case study using SCQA. Review a statistical concept with StatQuest.' },
+  { day:'Sat', label:'Saturday', icon:'🛠️', focus:'Project Work',        detail:'Dedicated project day. Build, clean, visualize, or document your current portfolio project.' },
+  { day:'Sun', label:'Sunday',   icon:'📖', focus:'Review & Plan',       detail:'Review the week\'s topics. Mark missed ones. Plan next week\'s focus. Update GitHub README.' },
+];
+
+function getSuggestedNext() {
+  for (const lv of LEVELS) {
+    for (const t of lv.topics) {
+      const s = state.topics[t.id] || '';
+      if (s !== 'done') {
+        const pendingTasks = t.tasks ? t.tasks.filter((_, i) => !(state.subTasks && state.subTasks[t.id + '_' + i])) : [];
+        return { level: lv, topic: t, pendingTasks };
+      }
+    }
+  }
+  return null;
+}
+
+// ============================================================
+// HOME PAGE
+// ============================================================
+function renderHome() {
+  const all = getAllTopics();
+  const done   = all.filter(t => state.topics[t.id] === 'done').length;
+  const missed = all.filter(t => state.topics[t.id] === 'missed').length;
+  const pct    = all.length ? Math.round(done / all.length * 100) : 0;
+
+  // Hero
+  document.getElementById('heroGreeting').textContent = getGreeting() + ', ' + state.userName + ' 👋';
+  document.getElementById('h-pct').textContent    = pct + '%';
+  document.getElementById('h-done').textContent   = done;
+  document.getElementById('h-streak').textContent = state.streak || 0;
+
+  // Arc
+  const circumference = 213.6;
+  const offset = circumference - (pct / 100) * circumference;
+  document.getElementById('arcFg').style.strokeDashoffset = offset;
+  document.getElementById('arcPct').textContent    = pct + '%';
+  document.getElementById('arcDone').textContent   = done;
+  document.getElementById('arcMissed').textContent = missed;
+  document.getElementById('arcTotal').textContent  = all.length;
+  document.getElementById('arcBar').style.width    = pct + '%';
+
+  // Streak
+  document.getElementById('strkDays').textContent = state.streak || 0;
+  document.getElementById('strkDone').textContent = done;
+
+  // Focus card
+  const curLevel = getCurrentLevel();
+  if (curLevel) {
+    const lvIdx = LEVELS.indexOf(curLevel);
+    const lvDone = curLevel.topics.filter(t => state.topics[t.id] === 'done').length;
+    const lvPct  = Math.round(lvDone / curLevel.topics.length * 100);
+    document.getElementById('focusLevel').textContent = 'Level ' + (lvIdx+1) + ' — ' + curLevel.title;
+    const nextTopic = curLevel.topics.find(t => !state.topics[t.id]);
+    document.getElementById('focusTask').textContent = nextTopic
+      ? 'Next: ' + nextTopic.name
+      : '✅ All topics covered! Start the project.';
+    document.getElementById('focusFill').style.width = lvPct + '%';
+    document.getElementById('focusPct').textContent  = lvPct + '%';
+  }
+
+  // Tip
+  document.getElementById('dailyTip').textContent = TIPS[new Date().getDate() % TIPS.length];
+
+  // ── FIRST-TIME / GUIDED LEARNING BANNER ──────────────────────
+  const isFirstTime = done === 0 && Object.keys(state.subTasks || {}).length === 0;
+  const homeEl = document.getElementById('page-home');
+  let startBanner = document.getElementById('startHereBanner');
+  if (!startBanner) {
+    startBanner = document.createElement('div');
+    startBanner.id = 'startHereBanner';
+    // Insert at very top of home page content (after hero)
+    const heroEl = homeEl.querySelector('.hero-card') || homeEl.querySelector('.card');
+    if (heroEl && heroEl.parentNode) {
+      heroEl.parentNode.insertBefore(startBanner, heroEl.nextSibling);
+    } else {
+      homeEl.prepend(startBanner);
+    }
+  }
+  if (isFirstTime) {
+    startBanner.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(255,107,53,0.18),rgba(155,114,248,0.12));border:1.5px solid rgba(255,107,53,0.5);border-radius:16px;padding:16px;margin-bottom:16px">
+        <div style="font-size:15px;font-weight:800;color:var(--orange);margin-bottom:10px">👋 Welcome, ${state.userName}! Start Here →</div>
+        <div style="font-size:12px;color:var(--text2);font-weight:600;line-height:1.8;margin-bottom:12px">
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span style="color:var(--orange);font-weight:800;flex-shrink:0">Step 1</span><span>Open <b>Roadmap</b> tab → tap <b>Level 1 — Excel</b> to expand it</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span style="color:var(--orange);font-weight:800;flex-shrink:0">Step 2</span><span>Tap any topic → expand subtasks → complete them one by one</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span style="color:var(--orange);font-weight:800;flex-shrink:0">Step 3</span><span>After finishing all subtasks → click <b>Mark Done</b> to earn XP</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span style="color:var(--orange);font-weight:800;flex-shrink:0">Step 4</span><span>Follow the <b>Daily Schedule</b> below — 1 hour/day = job offer in 6 months</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--orange);font-weight:800;flex-shrink:0">Step 5</span><span>Build the <b>Level Project</b> at the end of each level and push it to GitHub</span></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="showPage('roadmap')" style="flex:1;background:var(--orange);color:white;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">🚀 Start Level 1 →</button>
+          <button onclick="document.getElementById('startHereBanner').style.display='none'" style="background:var(--surface2);color:var(--text3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">✕</button>
+        </div>
+      </div>`;
+    startBanner.style.display = 'block';
+  } else {
+    startBanner.style.display = 'none';
+  }
+
+  // Daily Flow schedule
+  const todayIdx = (new Date().getDay() + 6) % 7; // Mon=0
+  const dayFlow = DAILY_FLOW[todayIdx];
+  const dailyFlowHtml = DAILY_FLOW.map((d, i) => {
+    const isToday = i === todayIdx;
+    return `<div style="flex:1;text-align:center;padding:6px 3px;border-radius:8px;background:${isToday ? 'var(--orange-dim)' : 'transparent'};border:1px solid ${isToday ? 'rgba(255,107,53,0.4)' : 'transparent'}">
+      <div style="font-size:14px">${d.icon}</div>
+      <div style="font-size:9px;font-weight:800;color:${isToday ? 'var(--orange)' : 'var(--text3)'};margin-top:2px">${d.day}</div>
+      <div style="font-size:8px;color:${isToday ? 'var(--text)' : 'var(--text3)'};font-weight:600;margin-top:1px;line-height:1.2">${d.focus}</div>
+    </div>`;
+  }).join('');
+
+  // Render/update daily flow card
+  let dfCard = document.getElementById('dailyFlowCard');
+  if (!dfCard) {
+    const motiSection = homeEl.querySelector('.moti-card');
+    dfCard = document.createElement('div');
+    dfCard.id = 'dailyFlowCard';
+    motiSection.before(dfCard);
+  }
+  dfCard.innerHTML = `
+    <div class="sec-head"><div class="sec-title">🗓 Daily Study Flow</div></div>
+    <div class="card" style="padding:12px;margin-bottom:16px">
+      <div style="display:flex;gap:4px;margin-bottom:10px">${dailyFlowHtml}</div>
+      <div style="background:var(--bg2);border-radius:8px;padding:10px;border-left:3px solid var(--orange)">
+        <div style="font-size:11px;font-weight:800;color:var(--orange);margin-bottom:3px">TODAY — ${dayFlow.focus}</div>
+        <div style="font-size:11px;font-weight:600;color:var(--text2);line-height:1.5">${dayFlow.detail}</div>
+      </div>
+    </div>`;
+
+  // Render/update suggested next
+  let snCard = document.getElementById('suggestedNextCard');
+  if (!snCard) {
+    const motiSection = homeEl.querySelector('.moti-card');
+    snCard = document.createElement('div');
+    snCard.id = 'suggestedNextCard';
+    motiSection.before(snCard);
+  }
+  const sn = getSuggestedNext();
+  if (sn) {
+    const lvIdx = LEVELS.indexOf(sn.level);
+    snCard.innerHTML = `
+      <div class="sec-head"><div class="sec-title">⚡ Suggested Next</div></div>
+      <div class="card" style="margin-bottom:16px;border-color:rgba(255,107,53,0.35);background:var(--orange-dim)">
+        <div style="font-size:10px;font-weight:800;color:var(--orange);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Level ${lvIdx+1} · ${sn.level.title}</div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:8px">${sn.topic.name}</div>
+        ${sn.pendingTasks.length ? `<div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:6px">NEXT TASK:</div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--surface);border-radius:8px">
+          <span style="color:var(--orange);font-size:14px;flex-shrink:0">→</span>
+          <span style="font-size:12px;font-weight:600;color:var(--text)">${sn.pendingTasks[0]}</span>
+        </div>` : '<div style="font-size:12px;color:var(--green);font-weight:700">✅ All subtasks done — mark topic complete!</div>'}
+        <button onclick="showPage('roadmap')" style="margin-top:10px;width:100%;background:var(--orange);color:white;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit">Open Roadmap →</button>
+      </div>`;
+  } else {
+    snCard.innerHTML = '';
+  }
+
+  // Motivational (rotates)
+  const motis = [
+    { title:'Remember ' + state.userName + ' —', body:'Your MCA background gives you a head start over 80% of applicants. One focused hour daily = job offer in 6 months.' },
+    { title:'Consistency beats intensity.', body:'30 minutes every day > 4 hours on weekends. Show up. Mark topics. Track progress. It compounds.' },
+    { title:'SQL is your superpower.', body:'Most applicants fear SQL. You\'re solving 2 problems a day. That alone will land you interviews.' },
+    { title:'Every project is an investment.', body:'One good Kaggle project on your GitHub gets more recruiter attention than 100 cold applications.' },
+  ];
+  const m = motis[new Date().getDate() % motis.length];
+  document.getElementById('motiTitle').textContent = m.title;
+  document.getElementById('motiBody').textContent  = m.body;
+
+  // Nav alert
+  document.querySelector('[data-page="tracker"]').classList.toggle('has-alert', missed > 0);
+
+  updateXPBadge();
+  drawRadar();
+}
+
+// ============================================================
+// ROADMAP
+// ============================================================
+function renderRoadmap() {
+  const container = document.getElementById('levelsList');
+  container.innerHTML = '';
+
+  // ── Learning Progression Banner ────────────────────────────
+  const allDone = LEVELS.flatMap(l => l.topics).filter(t => state.topics[t.id] === 'done').length;
+  const totalTopics = LEVELS.flatMap(l => l.topics).length;
+  const phases = [
+    { label:'Beginner',     levels:'L1–L2', color:'#ff6b35', done: allDone >= 0 },
+    { label:'Intermediate', levels:'L3–L4', color:'#f9c535', done: allDone >= 20 },
+    { label:'Advanced',     levels:'L5–L6', color:'#9b72f8', done: allDone >= 40 },
+    { label:'Job-Ready',    levels:'L7',    color:'#2dd96e', done: allDone >= 60 },
+  ];
+  const progressionHtml = `
+    <div style="display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden;border:1px solid var(--border)">
+      ${phases.map((p, i) => `
+        <div style="flex:1;padding:8px 4px;text-align:center;background:${p.done ? p.color+'22' : 'var(--surface)'};border-right:${i<3?'1px solid var(--border)':'none'}">
+          <div style="font-size:9px;font-weight:800;color:${p.done ? p.color : 'var(--text3)'};letter-spacing:0.5px">${p.label}</div>
+          <div style="font-size:8px;color:var(--text3);font-weight:600;margin-top:2px">${p.levels}</div>
+          ${p.done ? `<div style="font-size:8px;color:${p.color};font-weight:800;margin-top:2px">✓ Unlocked</div>` : '<div style="font-size:8px;color:var(--text3);margin-top:2px">🔒 Locked</div>'}
+        </div>`).join('')}
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:16px;font-size:11px;color:var(--text2);font-weight:600;line-height:1.7">
+      <span style="color:var(--orange);font-weight:800">How to use this roadmap:</span>
+      Work top-to-bottom. Expand each level → tap a topic → complete all subtasks → click <b>Mark Done</b>.
+      Do the <b>Level Project</b> at the end of each level and push it to GitHub. Don't skip levels.
+      <span style="color:var(--green);font-weight:800"> ${allDone}/${totalTopics} topics done.</span>
+    </div>`;
+
+  const progBanner = document.createElement('div');
+  progBanner.innerHTML = progressionHtml;
+  container.appendChild(progBanner);
+
+  LEVELS.forEach((lv, idx) => {
+    const topicsDone = lv.topics.filter(t => state.topics[t.id] === 'done').length;
+    const pct = Math.round(topicsDone / lv.topics.length * 100);
+    const isComplete = topicsDone === lv.topics.length;
+    const isCurrent  = !isComplete && LEVELS.slice(0, idx).every(l =>
+      l.topics.filter(t => state.topics[t.id] === 'done').length === l.topics.length
+    );
+
+    const card = document.createElement('div');
+    card.className = 'level-card' +
+      (isComplete ? ' complete-card' : '') +
+      (isCurrent  ? ' current-card'  : '');
+    card.id = 'card-' + lv.id;
+
+    card.innerHTML = `
+      <div class="level-header" onclick="toggleLevel('${lv.id}')">
+        <div class="lvl-badge" style="background:${lv.color}">
+          <span class="lvl-n">${idx+1}</span>
+          <span class="lvl-lbl">LEVEL</span>
+        </div>
+        <div class="lvl-info">
+          <div class="lvl-title">${isComplete ? '✅ ' : isCurrent ? '▶ ' : ''}${lv.title}</div>
+          <div class="lvl-sub">${lv.sub}</div>
+        </div>
+        <div class="lvl-right">
+          <div class="lvl-pct" style="color:${lv.color}">${pct}%</div>
+          <div class="lvl-weeks">${lv.weeks}</div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="level-progress-bar">
+        <div class="level-progress-fill" style="width:${pct}%;background:${lv.color}"></div>
+      </div>
+      <div class="level-body" id="body-${lv.id}">
+        <!-- Topics -->
+        <div class="topic-section">
+          <div class="topic-sec-title">📚 Topics — Tap to expand subtasks · Complete each task · Mark Done</div>
+          ${lv.topics.map((t, tIdx) => {
+            const s = state.topics[t.id] || '';
+            const tasks = t.tasks || [];
+            const completedTasks = tasks.filter((_, i) => state.subTasks && state.subTasks[t.id + '_' + i]).length;
+            const tasksPct = tasks.length ? Math.round(completedTasks / tasks.length * 100) : 0;
+            // Job-relevance tags for key topics
+            const hotTopics = {
+              'lv2_3':'🔥 Top Interview Topic','lv2_6':'🔥 Asked in 80% SQL Rounds',
+              'lv2_7':'🔥 Window Functions = Senior Level','lv2_8':'🔥 CTE = Code Quality Signal',
+              'lv3_4':'✅ Core Daily Tool','lv3_7':'✅ Real Job Work',
+              'lv3_10':'✅ End-to-End EDA = Portfolio Gold',
+              'lv4_4':'🔥 Stats Interview Essential','lv4_5':'🔥 A/B Test = Product DA Skill',
+              'lv5_3':'🔥 DAX = Power BI Differentiator','lv5_5':'🔥 Storytelling = Promotion Skill',
+              'lv7_3':'🚀 Resume + 50 SQL = Job Ready'
+            };
+            const hotTag = hotTopics[t.id] ? `<span style="font-size:9px;font-weight:800;color:#f9c535;background:rgba(249,197,53,0.12);border:1px solid rgba(249,197,53,0.3);border-radius:4px;padding:2px 6px;margin-left:6px;flex-shrink:0">${hotTopics[t.id]}</span>` : '';
+            const subtasksHtml = tasks.length ? `
+              <div class="subtask-list" id="stl-${t.id}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+                <div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px">PRACTICAL TASKS (${completedTasks}/${tasks.length}) — Do these hands-on</div>
+                ${tasks.map((task, i) => {
+                  const done = state.subTasks && state.subTasks[t.id + '_' + i];
+                  return `<div class="action-task ${done ? 'done' : ''}" style="margin-bottom:5px" onclick="toggleSubTask('${t.id}',${i},event)">
+                    <div class="act-cb">${done ? '✓' : ''}</div>
+                    <div style="font-size:11px;font-weight:600">${task}</div>
+                  </div>`;
+                }).join('')}
+                <div style="margin-top:8px;display:flex;gap:6px">
+                  <button onclick="markTopicDone('${t.id}',event)" style="flex:1;background:var(--green-dim);color:var(--green);border:1px solid rgba(45,217,110,0.4);border-radius:6px;padding:6px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit">✅ Mark Done</button>
+                  <button onclick="markTopicReview('${t.id}',event)" style="flex:1;background:var(--red-dim);color:var(--red);border:1px solid rgba(240,82,82,0.4);border-radius:6px;padding:6px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit">⚠️ Need Review</button>
+                </div>
+              </div>` : '';
+            return `<div class="topic-item ${s}" onclick="toggleSubtaskPanel('${t.id}')">
+              <div style="font-size:11px;font-weight:800;color:var(--text3);margin-right:6px;flex-shrink:0">${tIdx+1}</div>
+              <div class="topic-cb">${s==='done'?'✓':s==='missed'?'✗':''}</div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+                  <div class="topic-name">${t.name}</div>${hotTag}
+                </div>
+                ${tasks.length ? `<div style="font-size:10px;color:var(--text3);font-weight:600;margin-top:2px">${completedTasks}/${tasks.length} tasks done${tasksPct>0?' · '+tasksPct+'%':''}</div>` : ''}
+              </div>
+              ${s ? `<div class="topic-status">${s==='done'?'Done':'Review'}</div>` : `<div style="font-size:12px;color:var(--text3)">▾</div>`}
+              ${subtasksHtml}
+            </div>`;
+          }).join('')}
+        </div>
+        <!-- Resources -->
+        <div class="res-section">
+          <div class="topic-sec-title">📖 Resources</div>
+          ${lv.resources.map(r => `
+            <div class="res-item">
+              <span class="res-emoji">${r.icon}</span>
+              <div class="res-info">
+                <div class="res-name">${r.name}</div>
+                <div class="res-desc">${r.desc}</div>
+              </div>
+              <span class="${r.type==='free'?'tag-free':'tag-paid'}">${r.type==='free'?'FREE':'PAID'}</span>
+            </div>`).join('')}
+        </div>
+        <!-- Project -->
+        <div class="project-box" style="background:${lv.bg};border-color:${lv.color}40">
+          <div class="proj-head">
+            <span class="proj-emoji">${lv.project.name.split(' ')[0].length > 3 ? '🎯' : lv.project.name.split(' ')[0]}</span>
+            <span class="proj-name">Level ${idx+1} Project: ${lv.project.name}</span>
+          </div>
+          <div class="proj-desc">${lv.project.desc}</div>
+          ${lv.project.dataset ? `<div style="font-size:10px;color:var(--text3);font-weight:700;margin-top:6px">📦 Dataset: <span style="color:var(--accent2);font-weight:600">${lv.project.dataset}</span></div>` : ''}
+          <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">
+            ${lv.project.tools.map(t => `<span class="tool-pill">${t}</span>`).join('')}
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:${lv.color};font-weight:700">
+            🏆 ${lv.project.outcome}
+          </div>
+        </div>
+      </div>`;
+
+    container.appendChild(card);
+
+    if (idx < LEVELS.length - 1) {
+      const conn = document.createElement('div');
+      conn.className = 'level-connector';
+      conn.textContent = '↓';
+      container.appendChild(conn);
+    }
+  });
+}
+
+function toggleLevel(id) {
+  document.getElementById('card-' + id).classList.toggle('open');
+}
+
+function toggleSubtaskPanel(topicId) {
+  const panel = document.getElementById('stl-' + topicId);
+  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleSubTask(topicId, taskIdx, e) {
+  e.stopPropagation();
+  const key = topicId + '_' + taskIdx;
+  if (!state.subTasks) state.subTasks = {};
+  state.subTasks[key] = !state.subTasks[key];
+  saveState();
+  // Auto-complete topic if all subtasks done
+  const topic = LEVELS.flatMap(l => l.topics).find(t => t.id === topicId);
+  if (topic && topic.tasks) {
+    const allDone = topic.tasks.every((_, i) => state.subTasks[topicId + '_' + i]);
+    if (allDone && state.topics[topicId] !== 'done') {
+      showToast('🎯 All subtasks done! Mark topic complete ↓');
+    }
+  }
+  updateStreakOnActivity();
+  renderRoadmap();
+  renderHome();
+}
+
+function markTopicDone(topicId, e) {
+  e.stopPropagation();
+  state.topics[topicId] = 'done';
+  updateStreakOnActivity();
+  saveState();
+  updateXPBadge();
+  showToast('✅ Topic marked Done! +XP');
+  renderRoadmap();
+  renderHome();
+}
+
+function markTopicReview(topicId, e) {
+  e.stopPropagation();
+  state.topics[topicId] = 'missed';
+  saveState();
+  showToast('⚠️ Marked for Review');
+  renderRoadmap();
+  renderHome();
+}
+
+function updateStreakOnActivity() {
+  const today = new Date().toDateString();
+  if (state.lastStudy !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    state.streak = (state.lastStudy === yesterday) ? (state.streak || 0) + 1 : 1;
+    state.lastStudy = today;
+    state.studyDays = [...(state.studyDays || []), today].slice(-60);
+  }
+}
+
+function cycleTopic(topicId) {
+  const cur = state.topics[topicId] || '';
+  if (cur === '')            state.topics[topicId] = 'done';
+  else if (cur === 'done')   state.topics[topicId] = 'missed';
+  else                       delete state.topics[topicId];
+  updateStreakOnActivity();
+  saveState();
+  updateXPBadge();
+  const status = state.topics[topicId];
+  showToast(status === 'done' ? '✅ Marked Done! +XP' : status === 'missed' ? '⚠️ Marked for Review' : '↩️ Cleared');
+  renderRoadmap();
+  renderHome();
+}
+
+// ============================================================
+// TRACKER
+// ============================================================
+function renderTracker() {
+  renderMissed();
+  renderSkillGrid();
+  renderSkillRatings();
+  renderWeekCal();
+}
+
+function renderMissed() {
+  const all = getAllTopics();
+  const missed = all.filter(t => state.topics[t.id] === 'missed');
+  const el = document.getElementById('missedList');
+
+  if (!missed.length) {
+    el.innerHTML = '<div class="empty-state"><div class="big">🎉</div><p>No missed topics! Keep it up.</p></div>';
+    return;
+  }
+
+  const byLevel = {};
+  missed.forEach(t => {
+    const lv = LEVELS.find(l => l.topics.some(tp => tp.id === t.id));
+    if (lv) {
+      if (!byLevel[lv.id]) byLevel[lv.id] = [];
+      byLevel[lv.id].push({ ...t, lvTitle: lv.title, lvColor: lv.color });
+    }
+  });
+
+  el.innerHTML = `
+    <div class="missed-banner">
+      <div class="missed-count">${missed.length}</div>
+      <div>
+        <div class="missed-info-title">Topics Need Review</div>
+        <div class="missed-info-sub">Tap to navigate and re-learn</div>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(240,82,82,0.3)">
+      ${Object.entries(byLevel).map(([lvId, topics]) => `
+        <div style="margin-bottom:10px">
+          <div style="font-size:10px;font-weight:800;color:${topics[0].lvColor};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${topics[0].lvTitle}</div>
+          <div>${topics.map(t => `<span class="missed-pill" onclick="goToTopic('${lvId}')">${t.name}</span>`).join('')}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function goToTopic(levelId) {
+  showPage('roadmap');
+  setTimeout(() => {
+    const card = document.getElementById('card-' + levelId);
+    if (card) {
+      card.classList.add('open');
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 100);
+}
+
+function renderSkillGrid() {
+  const gradients = {
+    sql:          'linear-gradient(90deg,#f9c535,#fbbf24)',
+    python:       'linear-gradient(90deg,#2dd96e,#4ade80)',
+    excel:        'linear-gradient(90deg,#ff6b35,#ff9f43)',
+    statistics:   'linear-gradient(90deg,#00d4c8,#22d3ee)',
+    powerbi:      'linear-gradient(90deg,#9b72f8,#a78bfa)',
+    ml:           'linear-gradient(90deg,#4f8ef7,#60a5fa)',
+    storytelling: 'linear-gradient(90deg,#f472b6,#fb7185)',
+    cloud:        'linear-gradient(90deg,#10b981,#34d399)',
+  };
+
+  document.getElementById('skillGrid').innerHTML = SKILLS.map(sk => {
+    const lv    = LEVELS.find(l => l.id === sk.levelId);
+    const done  = lv ? lv.topics.filter(t => state.topics[t.id] === 'done').length : 0;
+    const total = lv ? lv.topics.length : 1;
+    const pct   = Math.round(done / total * 100);
+    const status      = pct === 0 ? 'Not Started' : pct < 50 ? 'Learning' : pct < 100 ? 'In Progress' : 'Completed ✅';
+    const statusColor = pct === 0 ? 'var(--text3)' : pct < 50 ? 'var(--yellow)' : pct < 100 ? 'var(--blue)' : 'var(--green)';
+    return `<div class="skill-card">
+      <div class="skill-card-top">
+        <div class="skill-card-name">${sk.icon} ${sk.name}</div>
+        <div class="skill-card-pct" style="color:${statusColor}">${pct}%</div>
+      </div>
+      <div class="skill-track">
+        <div class="skill-fill" style="width:${pct}%;background:${gradients[sk.id]}"></div>
+      </div>
+      <div class="skill-status" style="color:${statusColor}">${status}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderSkillRatings() {
+  document.getElementById('skillRateWrap').innerHTML = SKILLS.map(sk => {
+    const r = state.skillRatings[sk.id] || 0;
+    return `<div class="skill-rate-item">
+      <div class="skill-rate-name">${sk.icon} ${sk.name}</div>
+      <div class="stars">
+        ${[1,2,3,4,5].map(i => `<span class="star" onclick="rateSk('${sk.id}',${i})">${i <= r ? '⭐' : '☆'}</span>`).join('')}
+      </div>
+      <div class="skill-rate-num">${r}/5</div>
+    </div>`;
+  }).join('');
+}
+
+function rateSk(skId, val) {
+  state.skillRatings[skId] = val;
+  saveState();
+  renderSkillRatings();
+  drawRadar();
+  showToast('⭐ Skill rated!');
+}
+
+function renderWeekCal() {
+  const labels = ['M','T','W','T','F','S','S'];
+  const today = new Date();
+  // Get Monday of current week
+  const dayOfWeek = today.getDay(); // 0=Sun
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
+
+  document.getElementById('weekCal').innerHTML = labels.map((d, i) => {
+    const day = new Date(monday);
+    day.setDate(monday.getDate() + i);
+    const dayStr = day.toDateString();
+    const isToday   = dayStr === today.toDateString();
+    const isStudied = (state.studyDays || []).includes(dayStr);
+    const isPast    = day < today && !isToday;
+
+    return `<div class="week-day">
+      <div class="week-day-label" style="color:${isToday?'var(--orange)':'var(--text3)'}">${d}</div>
+      <div class="week-day-box ${isStudied?'studied':isToday?'today':isPast?'past':''}">
+        ${isStudied ? '✓' : isToday ? '•' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// RADAR CHART (Canvas)
+// ============================================================
+function drawRadar() {
+  const canvas = document.getElementById('radarChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr  = window.devicePixelRatio || 1;
+  const size = Math.min(canvas.parentElement.clientWidth - 32, 280);
+  canvas.width  = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width  = size + 'px';
+  canvas.style.height = size + 'px';
+  ctx.scale(dpr, dpr);
+
+  const cx = size / 2, cy = size / 2, r = size * 0.36;
+  const labels = SKILLS.map(s => s.icon + ' ' + s.name);
+  const n = labels.length;
+  const angles = labels.map((_, i) => (Math.PI * 2 * i / n) - Math.PI / 2);
+
+  // Grid rings
+  [0.25, 0.5, 0.75, 1].forEach(lvl => {
+    ctx.beginPath();
+    angles.forEach((a, i) => {
+      const x = cx + Math.cos(a) * r * lvl;
+      const y = cy + Math.sin(a) * r * lvl;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(46,46,66,0.8)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Spokes
+  angles.forEach(a => {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+    ctx.strokeStyle = 'rgba(46,46,66,0.8)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Data values
+  const vals = SKILLS.map(sk => {
+    const lv   = LEVELS.find(l => l.id === sk.levelId);
+    const done  = lv ? lv.topics.filter(t => state.topics[t.id] === 'done').length : 0;
+    const total = lv ? lv.topics.length : 1;
+    const topicPct = done / total;
+    const selfRate = (state.skillRatings[sk.id] || 0) / 5;
+    return Math.max(topicPct, selfRate * 0.5, 0.03);
+  });
+
+  // Fill
+  ctx.beginPath();
+  angles.forEach((a, i) => {
+    const x = cx + Math.cos(a) * r * vals[i];
+    const y = cy + Math.sin(a) * r * vals[i];
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+  grad.addColorStop(0, 'rgba(255,107,53,0.4)');
+  grad.addColorStop(1, 'rgba(255,107,53,0.1)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Dots
+  angles.forEach((a, i) => {
+    const x = cx + Math.cos(a) * r * vals[i];
+    const y = cy + Math.sin(a) * r * vals[i];
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff6b35';
+    ctx.fill();
+    ctx.strokeStyle = 'var(--bg)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // Labels
+  const fontSize = Math.max(9, Math.round(size * 0.032));
+  ctx.font = `bold ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+  ctx.fillStyle = '#9898b8';
+  ctx.textAlign = 'center';
+  angles.forEach((a, i) => {
+    const lx = cx + Math.cos(a) * (r + 20);
+    const ly = cy + Math.sin(a) * (r + 20);
+    ctx.fillText(labels[i], lx, ly + 4);
+  });
+}
+
+// ============================================================
+// PROJECTS PAGE
+// ============================================================
+function renderProjects() {
+  const container = document.getElementById('projectsList');
+  const groups = [
+    { key:'beginner',     label:'🌱 Beginner Projects',     color:'#ff6b35' },
+    { key:'intermediate', label:'⚡ Intermediate Projects', color:'#9b72f8' },
+    { key:'advanced',     label:'🚀 Advanced Projects',     color:'#4f8ef7' },
+  ];
+
+  container.innerHTML = groups.map(g => `
+    <div class="sec-head" style="margin-top:${g.key==='beginner'?'0':'16px'}">
+      <div class="sec-title">${g.label}</div>
+    </div>
+    ${PROJECTS[g.key].map(p => `
+      <div class="proj-card">
+        <div class="proj-card-head">
+          <div class="proj-card-icon" style="background:${p.bg}">${p.icon}</div>
+          <div>
+            <div class="proj-card-title">${p.name}</div>
+            <div class="proj-card-sub">${p.level} Level</div>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">🎯 Problem Statement</div>
+        <div class="proj-card-desc" style="margin-bottom:10px">${p.problem}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">📦 Dataset</div>
+        <div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:10px;word-break:break-all">${p.dataset}</div>
+        <div style="font-size:11px;font-weight:700;color:#2dd96e;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">📋 Step-by-Step Tasks</div>
+        <ol style="margin:0 0 10px 0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          ${(p.steps||[]).map(s=>`<li style="font-size:12px;color:var(--text2);font-weight:600;line-height:1.5">${s}</li>`).join('')}
+        </ol>
+        <div class="proj-tools">
+          ${p.tools.map(t => `<span class="tool-pill">${t}</span>`).join('')}
+        </div>
+        <div class="proj-outcome" style="margin-top:8px">
+          <strong>✅ Expected Output:</strong> ${p.expectedOutput||p.outcome}
+        </div>
+      </div>`).join('')}
+  `).join('');
+
+  // Portfolio guide
+  document.getElementById('portfolioGuide').innerHTML = `
+    <div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:12px">Follow these steps to build a portfolio that gets recruiters to DM you:</div>
+    ${PORTFOLIO_TIPS.map(t => `
+      <div class="portfolio-tip">
+        <span class="ptip-icon">${t.icon}</span>
+        <div class="ptip-text"><strong>${t.title}</strong>${t.text}</div>
+      </div>`).join('')}`;
+
+  // GitHub tips
+  document.getElementById('githubTips').innerHTML = `
+    <div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:12px">GitHub is your public resume. Make it shine:</div>
+    ${GITHUB_TIPS.map(t => `
+      <div class="portfolio-tip">
+        <span class="ptip-icon">${t.icon}</span>
+        <div class="ptip-text"><strong>${t.title}</strong>${t.text}</div>
+      </div>`).join('')}`;
+}
+
+// ============================================================
+// INTERVIEW PAGE
+// ============================================================
+function renderInterview() {
+  // SQL solved count
+  const sqlSolvedCount = SQL_DRILLS.filter(q => state.sqlSolved[q.id]).length;
+  document.getElementById('sqlProgress').textContent = sqlSolvedCount + '/' + SQL_DRILLS.length + ' solved';
+
+  // SQL Drills
+  document.getElementById('sqlDrills').innerHTML = SQL_DRILLS.map(q => {
+    const solved = state.sqlSolved[q.id];
+    return `<div class="sql-card">
+      <div class="sql-meta">
+        <span class="chip chip-${q.level === 'easy' ? 'green' : q.level === 'medium' ? 'yellow' : 'red'}">${q.level}</span>
+      </div>
+      <div class="sql-q">${q.q}</div>
+      <button class="sql-solve-btn ${solved ? 'solved' : ''}" onclick="toggleSql('${q.id}')">
+        ${solved ? '✓ Solved!' : 'Mark Solved'}
+      </button>
+    </div>`;
+  }).join('');
+
+  // Case Studies
+  document.getElementById('caseStudies').innerHTML = CASE_STUDIES.map(c => `
+    <div class="case-card">
+      <div class="case-head">
+        <div class="case-num" style="background:${c.color}">${c.num}</div>
+        <div class="case-title">${c.title}</div>
+      </div>
+      <div class="case-body">${c.body}</div>
+      <div class="case-hint">💡 Hint: ${c.hint}</div>
+    </div>`).join('');
+
+  // Interview Tips
+  document.getElementById('interviewTips').innerHTML = `
+    <div style="font-size:12px;color:var(--text3);font-weight:600;margin-bottom:12px">Read these before every interview. Know them by heart.</div>
+    ${INTERVIEW_TIPS.map((t, i) => `
+      <div class="itip-item">
+        <div class="itip-num">${i+1}</div>
+        <div class="itip-text"><strong>${t.title}</strong>${t.text}</div>
+      </div>`).join('')}`;
+}
+
+function toggleSql(id) {
+  state.sqlSolved[id] = !state.sqlSolved[id];
+  saveState();
+  updateXPBadge();
+  showToast(state.sqlSolved[id] ? '💪 SQL solved! +8 XP' : '↩️ Cleared');
+  renderInterview();
+}
+
+// ============================================================
+// JOB PLAN
+// ============================================================
+function renderJobPlan() {
+  document.getElementById('jobPlanList').innerHTML = JOB_PLAN.map(p => `
+    <div class="action-card">
+      <div class="action-head">
+        <div class="action-num" style="background:${p.color}">${p.num}</div>
+        <div class="action-title">${p.title}</div>
+      </div>
+      <div class="action-body">${p.body}</div>
+      <div class="action-tasks">
+        ${p.tasks.map(t => {
+          const done = state.jobTasks[t.id];
+          return `<div class="action-task ${done ? 'done' : ''}" onclick="toggleJobTask('${t.id}')">
+            <div class="act-cb">${done ? '✓' : ''}</div>
+            <div>${t.text}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+
+  // Companies
+  document.getElementById('companiesList').innerHTML = COMPANIES.map(c =>
+    `<div class="company-pill">${c}</div>`
+  ).join('');
+}
+
+function toggleJobTask(id) {
+  state.jobTasks[id] = !state.jobTasks[id];
+  saveState();
+  updateXPBadge();
+  showToast(state.jobTasks[id] ? '✅ Done! +5 XP' : '↩️ Undone');
+  renderJobPlan();
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function renderSettings() {
+  document.getElementById('settingsName').value = state.userName || 'Ibbani';
+  document.getElementById('pinStatus').textContent = state.pin ? 'Set ✅' : 'Not set ⚠️';
+
+  // Progress summary
+  const all    = getAllTopics();
+  const done   = all.filter(t => state.topics[t.id] === 'done').length;
+  const missed = all.filter(t => state.topics[t.id] === 'missed').length;
+  const pct    = all.length ? Math.round(done / all.length * 100) : 0;
+  const xp     = calcXP();
+  const sqlSolved = SQL_DRILLS.filter(q => state.sqlSolved[q.id]).length;
+
+  document.getElementById('progressSummary').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${[
+        { label:'Overall Progress', val: pct + '%', color: 'var(--orange)' },
+        { label:'Topics Done',      val: done,       color: 'var(--green)' },
+        { label:'Topics to Review', val: missed,     color: 'var(--red)' },
+        { label:'Day Streak',       val: (state.streak||0) + '🔥', color: 'var(--yellow)' },
+        { label:'Total XP',         val: xp + ' ⚡',  color: 'var(--purple)' },
+        { label:'SQL Solved',       val: sqlSolved + '/20', color: 'var(--blue)' },
+      ].map(item => `
+        <div style="background:var(--bg2);border-radius:10px;padding:12px;border:1px solid var(--border)">
+          <div style="font-size:17px;font-weight:800;color:${item.color}">${item.val}</div>
+          <div style="font-size:10px;color:var(--text3);font-weight:600;margin-top:2px">${item.label}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function updateName(name) {
+  state.userName = name.trim() || 'Ibbani';
+  saveState();
+  document.getElementById('appName').textContent = state.userName + ' · DA Journey';
+  showToast('✅ Name updated!');
+}
+
+// ============================================================
+// RESET
+// ============================================================
+function confirmReset() {
+  if (confirm('Reset ALL progress? Topics, ratings, job tasks, SQL solved, streak — everything. This CANNOT be undone.')) {
+    const pin = state.pin;
+    const userName = state.userName;
+    state = {
+      topics:{}, subTasks:{}, skillRatings:{}, jobTasks:{}, sqlSolved:{},
+      streak:0, lastStudy:null, studyDays:[], xp:0,
+      userName, pin
+    };
+    saveState();
+    renderAll();
+    showToast('🔄 All progress reset');
+  }
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================================
+// PWA INSTALL
+// ============================================================
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'flex';
+});
+function tryInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById('installBtn').style.display = 'none';
+    });
+  } else {
+    showToast('📱 Browser menu → Add to Home Screen');
+  }
+}
+document.getElementById('installBtn').addEventListener('click', tryInstall);
+window.addEventListener('appinstalled', () => {
+  showToast('🎉 App installed!');
+  document.getElementById('installBtn').style.display = 'none';
+});
+
+// ============================================================
+// INIT — Render Everything
+// ============================================================
+function renderAll() {
+  renderHome();
+  renderRoadmap();
+  renderProjects();
+  renderInterview();
+  renderJobPlan();
+  renderSettings();
+}
+
+// Start the app
+checkStorageHealth();
+initPin();
+</script>
+</body>
+</html>
