@@ -1,7 +1,10 @@
 {
   "name": "Ibbani Data Analyst Journey",
   "short_name": "Ibbani DA",
-  "start_url": ".",
+  "description": "Personal Data Analyst Career Tracker & Roadmap",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff6b35",
